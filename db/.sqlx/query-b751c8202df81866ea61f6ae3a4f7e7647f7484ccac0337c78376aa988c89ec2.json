@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": " \n                SELECT\n                    (SELECT sum(amount) FROM internal_transactions\n                    WHERE to_user_id = $1 AND tx_status = $2) AS total_rewards,\n                    (SELECT sum(amount) FROM internal_transactions\n                    WHERE to_user_id = $1 AND tx_status = $2 AND rewarded = FALSE ) AS unclaimed_rewards,\n                    (SELECT sum(amount) FROM internal_transactions\n                    WHERE to_user_id = $1 AND tx_status = $2 AND tx_type = $3) AS total_network_rewards,\n                    (SELECT sum(amount) FROM internal_transactions\n                    WHERE to_user_id = $1 AND tx_status = $2 AND tx_type = $4) AS total_task_rewards,\n                    (SELECT sum(amount) FROM internal_transactions\n                    WHERE to_user_id = $1 AND tx_status = $2 AND tx_type = $5) AS total_referral_rewards\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total_rewards",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 1,
+        "name": "unclaimed_rewards",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 2,
+        "name": "total_network_rewards",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 3,
+        "name": "total_task_rewards",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 4,
+        "name": "total_referral_rewards",
+        "type_info": "Numeric"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "b751c8202df81866ea61f6ae3a4f7e7647f7484ccac0337c78376aa988c89ec2"
+}

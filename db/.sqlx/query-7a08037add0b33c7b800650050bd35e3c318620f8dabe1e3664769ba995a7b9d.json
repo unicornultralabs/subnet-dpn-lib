@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO user_bandwidth_price (user_id, rate_per_kb, rate_per_second)\n                VALUES ($1, $2, $3)\n                ON CONFLICT (user_id) DO NOTHING;\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7a08037add0b33c7b800650050bd35e3c318620f8dabe1e3664769ba995a7b9d"
+}

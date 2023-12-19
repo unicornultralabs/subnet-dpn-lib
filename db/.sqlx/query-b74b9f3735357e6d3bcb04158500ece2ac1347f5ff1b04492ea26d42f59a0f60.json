@@ -1,0 +1,94 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                SELECT * \n                FROM sessions \n                WHERE provider_id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "provider_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "client_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "rate_per_second",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "rate_per_kb",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "handshake_at",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "end_at",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "duration",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "bandwidth_usage",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "duration_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "bandwidth_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 11,
+        "name": "total_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 12,
+        "name": "status",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "b74b9f3735357e6d3bcb04158500ece2ac1347f5ff1b04492ea26d42f59a0f60"
+}

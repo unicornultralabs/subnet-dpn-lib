@@ -1,0 +1,78 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                UPDATE transactions\n                SET attempts = attempts + 1\n                WHERE id = (\n                    SELECT id\n                    FROM transactions \n                    WHERE tx_status = $1 OR \n                        (tx_status = $2 AND attempts <= $3 AND no_retry = false)\n                    ORDER BY id ASC\n                    LIMIT 1\n                )\n                RETURNING \n                    transactions.id,\n                    transactions.user_id,\n                    transactions.from_addr,\n                    transactions.to_addr,\n                    transactions.tx_hash,\n                    transactions.amount,\n                    transactions.tx_type,\n                    transactions.tx_status,\n                    transactions.attempts,\n                    transactions.created_at\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "from_addr",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "to_addr",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "tx_hash",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "amount",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "tx_type",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "tx_status",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "attempts",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int2"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b8469ba622e0fdeb1c3934484360e985d0849930c701fcbb4fec95aa12419fb3"
+}

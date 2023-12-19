@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO user_tiers (user_id, tier)\n            VALUES ($1, $2)\n            ON CONFLICT (user_id) DO NOTHING;\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "918b58d4606de2fcb654890cc9ebd53a50d19f28cbafa1d27367d0eeba8a7b3a"
+}

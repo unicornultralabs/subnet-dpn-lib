@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                update sg_meta\n                set b_from = $1, b_to = $2\n                where id = $3\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "af1ae643ad8c678a90aaf6aeb4ce1593bf1bab3de8ebc0a7ac8b0e5b8a3b4728"
+}

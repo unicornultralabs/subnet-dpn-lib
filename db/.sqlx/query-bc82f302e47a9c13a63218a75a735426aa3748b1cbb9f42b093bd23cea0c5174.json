@@ -1,0 +1,104 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                UPDATE sessions \n                SET \n                client_id = $2,\n                rate_per_second = $3,\n                rate_per_kb = $4,\n                end_at = $5,\n                duration = $6,\n                bandwidth_usage = $7,\n                duration_fee = $8,\n                bandwidth_fee = $9,\n                total_fee = $10,\n                status = $11\n                WHERE id = $1\n                RETURNING \n                    sessions.id,\n                    sessions.provider_id,\n                    sessions.client_id,\n                    sessions.rate_per_second,\n                    sessions.rate_per_kb,\n                    sessions.handshake_at,\n                    sessions.end_at,\n                    sessions.duration,\n                    sessions.bandwidth_usage,\n                    sessions.duration_fee,\n                    sessions.bandwidth_fee,\n                    sessions.total_fee,\n                    sessions.status\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "provider_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "client_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "rate_per_second",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "rate_per_kb",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "handshake_at",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "end_at",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "duration",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "bandwidth_usage",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "duration_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "bandwidth_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 11,
+        "name": "total_fee",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 12,
+        "name": "status",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "bc82f302e47a9c13a63218a75a735426aa3748b1cbb9f42b093bd23cea0c5174"
+}
