@@ -1,5 +1,6 @@
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
 
@@ -8,7 +9,7 @@ pub enum SSOMethod {
     Apple,
 }
 
-#[derive(serde::Deserialize, Debug, Clone)]
+#[derive(serde::Deserialize, Debug, Clone, ToSchema)]
 pub struct SSOReq {
     pub method: i16,
     pub payload: String,
