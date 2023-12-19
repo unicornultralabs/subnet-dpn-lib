@@ -605,6 +605,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "dpn_core"
+version = "0.1.0"
+dependencies = [
+ "ethers",
+ "num-derive",
+ "num-traits",
+ "serde",
+ "serde_json",
+ "web3",
+]
+
+[[package]]
 name = "dunce"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2887,18 +2899,6 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 2.0.41",
-]
-
-[[package]]
-name = "subnet-dpn-core"
-version = "0.1.0"
-dependencies = [
- "ethers",
- "num-derive",
- "num-traits",
- "serde",
- "serde_json",
- "web3",
 ]
 
 [[package]]

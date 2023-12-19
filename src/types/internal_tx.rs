@@ -1,7 +1,7 @@
 use num_derive::FromPrimitive;
 use web3::types::U256;
 
-use crate::tx::TxStatus;
+use super::tx::TxStatus;
 
 #[derive(Debug, Clone, FromPrimitive)]
 pub enum InternalTxType {

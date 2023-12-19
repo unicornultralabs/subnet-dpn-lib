@@ -1,8 +1,0 @@
--- Add down migration script here
-ALTER TABLE sessions
-DROP CONSTRAINT IF EXISTS fk_user,
-DROP CONSTRAINT IF EXISTS fk_client,
-ALTER COLUMN provider_id TYPE VARCHAR(42),
-ALTER COLUMN client_id TYPE VARCHAR(42),
-ALTER COLUMN client_id SET NOT NULL,
-DROP COLUMN IF EXISTS status;
