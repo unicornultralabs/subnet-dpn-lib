@@ -1,1 +1,1 @@
-# subnet-dpn-lib
+# subnet-dpn-core
