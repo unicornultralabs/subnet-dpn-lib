@@ -1,21 +1,22 @@
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use web3::types::{Address, H256, U256};
+use utoipa::ToSchema;
 
-#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum TxType {
     Deposit,
     Withdrawal,
 }
 
-#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum TxStatus {
     Failed,
     Success,
     Pending,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Tx {
     pub id: i64,
     pub user_id: Option<i64>,
