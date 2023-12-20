@@ -28,7 +28,7 @@ impl Referral {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct ReferralsOverview {
     pub total_referees: i64,
     // total of txs related to all referees
