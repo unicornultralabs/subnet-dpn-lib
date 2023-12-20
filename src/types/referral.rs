@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct Referral {
     pub user_id: i64,
     pub referral_code: Option<String>,

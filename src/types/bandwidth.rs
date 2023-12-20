@@ -1,15 +1,16 @@
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use web3::types::U256;
+use utoipa::ToSchema;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserBandwidthPrice {
     pub user_id: i64,
     pub rate_per_kb: i64,
     pub rate_per_second: i64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Stat {
     pub peer_id: u32,
     pub client_id: String,
@@ -26,13 +27,13 @@ impl Stat {
     }
 }
 
-#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum SessionStatus {
     Active,
     Finished,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Session {
     pub id: i64,
     pub provider_id: i64,

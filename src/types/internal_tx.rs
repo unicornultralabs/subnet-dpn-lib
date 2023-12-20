@@ -1,16 +1,18 @@
 use num_derive::FromPrimitive;
+use serde::{Deserialize, Serialize};
 use web3::types::U256;
+use utoipa::ToSchema;
 
 use super::tx::TxStatus;
 
-#[derive(Debug, Clone, FromPrimitive)]
+#[derive(Debug, Clone, Serialize, Deserialize, FromPrimitive)]
 pub enum InternalTxType {
     Network,
     Task,
     Referral,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct InternalTx {
     pub id: i64,
     pub session_id: i64,

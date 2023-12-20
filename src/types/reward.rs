@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
+use utoipa::ToSchema;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct RewardsOverview {
     /// claimed + unclaimed
     pub total_rewards: String,
