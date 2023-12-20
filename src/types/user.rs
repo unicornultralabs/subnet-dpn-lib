@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 use web3::types::{Address, U256};
+use utoipa::ToSchema;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct User {
     pub id: i64,
     pub username: Option<String>,
