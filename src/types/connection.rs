@@ -23,6 +23,7 @@ pub struct PeerStats {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProxyAccData {
+    pub username: String,
     pub password: String,
     pub ip_rotation_period: Duration,
     pub whitelist_ip_list: Vec<IpAddr>,
