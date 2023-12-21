@@ -1,4 +1,3 @@
-use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -11,7 +10,7 @@ pub struct UserClaims {
     pub exp: u64,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone, ToSchema)]
 pub struct AuthTokens {
     pub access_token: String,
     pub refresh_token: String,

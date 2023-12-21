@@ -5,7 +5,7 @@ use utoipa::ToSchema;
 
 use super::tx::TxStatus;
 
-#[derive(Debug, Clone, Serialize, Deserialize, FromPrimitive)]
+#[derive(Debug, Clone, Serialize, Deserialize, FromPrimitive, ToSchema)]
 pub enum InternalTxType {
     Network,
     Task,
