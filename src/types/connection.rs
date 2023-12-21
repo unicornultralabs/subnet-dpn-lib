@@ -1,6 +1,5 @@
 use std::{net::IpAddr, time::Duration};
 
-use actix_web::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
