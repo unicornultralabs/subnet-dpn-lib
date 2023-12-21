@@ -52,3 +52,12 @@ pub struct AppleSSOInfo {
     pub code: String,
     pub token: String,
 }
+
+#[derive(Deserialize, Serialize, Debug, ToSchema)]
+pub struct SSORes {
+    pub code: i16,
+    pub user_id: Option<i64>,
+    pub access_token: Option<String>,
+    pub refresh_token: Option<String>,
+    pub error_msg: String,
+}

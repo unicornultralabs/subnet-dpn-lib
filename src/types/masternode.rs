@@ -10,3 +10,8 @@ pub struct MasternodeInfo {
     pub web_bind: String,
     pub root_ca: Option<String>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct AssignMasternodeRes {
+    pub masternode: Option<MasternodeInfo>,
+}
