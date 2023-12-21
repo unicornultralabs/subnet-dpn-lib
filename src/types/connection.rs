@@ -1,5 +1,6 @@
 use std::{net::IpAddr, time::Duration};
 
+use actix_web::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -22,7 +23,7 @@ pub struct PeerStats {
     pub download: u64,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct ProxyAccData {
     pub client_id: String,
     pub username: String,
@@ -31,7 +32,7 @@ pub struct ProxyAccData {
     pub whitelist_ip_list: Vec<IpAddr>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct VerifyProxyAccData {
     pub username: String,
     pub password: String,
