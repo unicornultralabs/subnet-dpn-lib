@@ -5,14 +5,20 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
-    /// peer_id
-    PeerConnected(String),
+    PeerConnected(PeernodeInfo),
     /// peer_id
     PeerDisconnected(String),
     /// peer_id, peer stats
     PeerStats(String, PeerStats),
     /// client_id, assigned_peer_id
     ClientProcessed(String, String),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct PeernodeInfo {
+    pub peer_id: String,
+    pub ip_addr: String,
+    pub throughput: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
