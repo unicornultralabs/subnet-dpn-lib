@@ -33,6 +33,13 @@ pub enum SessionStatus {
     Finished,
 }
 
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
+pub enum SessionTerminationReason {
+    ClientInactive,
+    PeerDisconnected,
+    SystemShutdown,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Session {
     pub id: i64,
@@ -48,6 +55,7 @@ pub struct Session {
     pub bandwidth_fee: U256,
     pub total_fee: U256,
     pub status: SessionStatus,
+    pub reason: Option<SessionTerminationReason>,
     pub tx_id: Option<i64>,
 }
 
@@ -66,6 +74,7 @@ impl Session {
         bandwidth_fee: U256,
         total_fee: U256,
         status: SessionStatus,
+        reason: Option<SessionTerminationReason>,
         tx_id: Option<i64>,
     ) -> Self {
         Self {
@@ -82,6 +91,7 @@ impl Session {
             bandwidth_fee: bandwidth_fee,
             total_fee: total_fee,
             status: status,
+            reason: reason,
             tx_id: tx_id,
         }
     }
