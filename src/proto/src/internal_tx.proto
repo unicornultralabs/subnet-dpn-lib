@@ -1,0 +1,11 @@
+syntax = "proto3";
+package subnet_dpn.internal_tx;
+
+message ProtoInternalTx {
+  string from_addr = 1;
+  string to_addr = 2;
+  int64 amount = 3;
+  int32 tx_type = 4;
+  int32 tx_status = 5;
+  int64 created_at = 6;
+}

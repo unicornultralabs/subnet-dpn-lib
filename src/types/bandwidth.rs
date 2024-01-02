@@ -1,3 +1,4 @@
+use ethers::types::H256;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -56,7 +57,7 @@ pub struct Session {
     pub total_fee: U256,
     pub status: SessionStatus,
     pub reason: Option<SessionTerminationReason>,
-    pub tx_id: Option<i64>,
+    pub tx_hash: Option<H256>,
 }
 
 impl Session {
@@ -75,7 +76,7 @@ impl Session {
         total_fee: U256,
         status: SessionStatus,
         reason: Option<SessionTerminationReason>,
-        tx_id: Option<i64>,
+        tx_hash: Option<H256>,
     ) -> Self {
         Self {
             id: id,
@@ -92,7 +93,7 @@ impl Session {
             total_fee: total_fee,
             status: status,
             reason: reason,
-            tx_id: tx_id,
+            tx_hash: tx_hash,
         }
     }
 }
