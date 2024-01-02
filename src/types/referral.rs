@@ -8,6 +8,7 @@ pub struct Referral {
     pub created_at: i64,
     pub referred_by: Option<i64>,
     pub referred_at: Option<i64>,
+    pub tx_id: Option<i64>,
 }
 
 impl Referral {
@@ -17,6 +18,7 @@ impl Referral {
         created_at: i64,
         referred_by: Option<i64>,
         referred_at: Option<i64>,
+        tx_id: Option<i64>,
     ) -> Self {
         Self {
             referral_code: referral_code,
@@ -24,6 +26,7 @@ impl Referral {
             created_at: created_at,
             referred_by: referred_by,
             referred_at: referred_at,
+            tx_id: tx_id,
         }
     }
 }

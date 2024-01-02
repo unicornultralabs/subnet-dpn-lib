@@ -1,7 +1,7 @@
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
-use web3::types::U256;
 use utoipa::ToSchema;
+use web3::types::U256;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserBandwidthPrice {
@@ -48,6 +48,7 @@ pub struct Session {
     pub bandwidth_fee: U256,
     pub total_fee: U256,
     pub status: SessionStatus,
+    pub tx_id: Option<i64>,
 }
 
 impl Session {
@@ -65,6 +66,7 @@ impl Session {
         bandwidth_fee: U256,
         total_fee: U256,
         status: SessionStatus,
+        tx_id: Option<i64>,
     ) -> Self {
         Self {
             id: id,
@@ -80,6 +82,7 @@ impl Session {
             bandwidth_fee: bandwidth_fee,
             total_fee: total_fee,
             status: status,
+            tx_id: tx_id,
         }
     }
 }
