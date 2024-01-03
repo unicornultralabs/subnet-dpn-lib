@@ -4,7 +4,7 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserTier {
-    pub user_id: i64,
+    pub user_addr: String,
     pub tier: Tier,
 }
 

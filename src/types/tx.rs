@@ -1,7 +1,7 @@
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
-use web3::types::{Address, H256, U256};
 use utoipa::ToSchema;
+use web3::types::{Address, H256, U256};
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum TxType {
@@ -19,7 +19,6 @@ pub enum TxStatus {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Tx {
     pub id: i64,
-    pub user_id: Option<i64>,
     pub from_addr: Address,
     pub to_addr: Address,
     pub tx_hash: Option<H256>,
@@ -32,7 +31,6 @@ pub struct Tx {
 impl Tx {
     pub fn new(
         id: i64,
-        user_id: Option<i64>,
         from_addr: Address,
         to_addr: Address,
         tx_hash: Option<H256>,
@@ -43,7 +41,6 @@ impl Tx {
     ) -> Self {
         Self {
             id: id,
-            user_id: user_id,
             from_addr: from_addr,
             to_addr: to_addr,
             tx_hash: tx_hash,

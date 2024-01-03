@@ -2,11 +2,11 @@ use ethers::types::H256;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use web3::types::U256;
+use web3::types::{U256, Address};
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserBandwidthPrice {
-    pub user_id: i64,
+    pub user_addr: String,
     pub rate_per_kb: i64,
     pub rate_per_second: i64,
 }
@@ -44,8 +44,8 @@ pub enum SessionTerminationReason {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Session {
     pub id: i64,
-    pub provider_id: i64,
-    pub client_id: i64,
+    pub provider_addr: Address,
+    pub client_addr: Address,
     pub rate_per_second: U256,
     pub rate_per_kb: U256,
     pub handshake_at: Option<i64>,
@@ -63,8 +63,8 @@ pub struct Session {
 impl Session {
     pub fn new(
         id: i64,
-        provider_id: i64,
-        client_id: i64,
+        provider_addr: Address,
+        client_addr: Address,
         rate_per_second: U256,
         rate_per_kb: U256,
         handshake_at: Option<i64>,
@@ -79,21 +79,21 @@ impl Session {
         tx_hash: Option<H256>,
     ) -> Self {
         Self {
-            id: id,
-            provider_id: provider_id,
-            client_id: client_id,
-            rate_per_second: rate_per_second,
-            rate_per_kb: rate_per_kb,
-            handshake_at: handshake_at,
-            end_at: end_at,
-            duration: duration,
-            bandwidth_usage: bandwidth_usage,
-            duration_fee: duration_fee,
-            bandwidth_fee: bandwidth_fee,
-            total_fee: total_fee,
-            status: status,
-            reason: reason,
-            tx_hash: tx_hash,
+            id,
+            provider_addr,
+            client_addr,
+            rate_per_second,
+            rate_per_kb,
+            handshake_at,
+            end_at,
+            duration,
+            bandwidth_usage,
+            duration_fee,
+            bandwidth_fee,
+            total_fee,
+            status,
+            reason,
+            tx_hash,
         }
     }
 }
