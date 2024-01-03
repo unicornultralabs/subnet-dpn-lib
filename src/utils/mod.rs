@@ -2,23 +2,11 @@ pub mod hash;
 
 use ethers::utils::{format_units, parse_units};
 use hex::encode;
-use num::BigUint;
 pub use web3::types::{
     Address, Bytes, Log, TransactionRequest, H128, H160, H2048, H256, U128, U256, U64,
 };
 
 /// Converts `U256` into the corresponding `BigUint` value.
-fn u256_to_biguint(value: U256) -> BigUint {
-    let mut bytes = [0u8; 32];
-    value.to_little_endian(&mut bytes);
-    BigUint::from_bytes_le(&bytes)
-}
-
-/// Converts `BigUint` value into the corresponding `U256` value.
-fn biguint_to_u256(value: BigUint) -> U256 {
-    let bytes = value.to_bytes_le();
-    U256::from_little_endian(&bytes)
-}
 
 fn ensure_chunkable(bytes: &[u8]) {
     assert!(
