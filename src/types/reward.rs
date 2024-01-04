@@ -4,13 +4,13 @@ use utoipa::ToSchema;
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct RewardsOverview {
     /// claimed + unclaimed
-    pub total_rewards: String,
+    pub total_rewards: i64,
     /// unclaimed
-    pub unclaimed_rewards: String,
+    pub unclaimed_rewards: i64,
     /// claimed + unclaimed
-    pub total_network_rewards: String,
+    pub total_network_rewards: i64,
     /// claimed + unclaimed
-    pub total_task_rewards: String,
+    pub total_task_rewards: i64,
     /// claimed + unclaimed
-    pub total_referral_rewards: String,
+    pub total_referral_rewards: i64,
 }
