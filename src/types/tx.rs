@@ -1,7 +1,10 @@
+use dpn_proto::tx::ProtoTx;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use web3::types::{Address, H256, U256};
+
+use crate::utils::{bytes_to_hex_string, u256_to_szabo, hash::hash};
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum TxType {
@@ -18,36 +21,56 @@ pub enum TxStatus {
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Tx {
-    pub id: i64,
+    pub tx_hash: H256,
     pub from_addr: Address,
     pub to_addr: Address,
-    pub tx_hash: Option<H256>,
     pub amount: U256,
     pub tx_type: TxType,
     pub tx_status: TxStatus,
-    pub created_at: u64,
+    pub chain_tx_hash: Option<H256>,
+    pub created_at: i64,
 }
 
 impl Tx {
     pub fn new(
-        id: i64,
         from_addr: Address,
         to_addr: Address,
-        tx_hash: Option<H256>,
         amount: U256,
         tx_type: TxType,
         tx_status: TxStatus,
-        created_at: u64,
+        chain_tx_hash: Option<H256>,
+        created_at: i64,
     ) -> Self {
-        Self {
-            id: id,
-            from_addr: from_addr,
-            to_addr: to_addr,
-            tx_hash: tx_hash,
-            amount: amount,
-            tx_type: tx_type,
-            tx_status: tx_status,
-            created_at: created_at,
+        let mut _self = Self {
+            tx_hash: H256::zero(),
+            from_addr,
+            to_addr,
+            amount,
+            tx_type,
+            tx_status,
+            chain_tx_hash,
+            created_at,
+        };
+
+        let proto: ProtoTx = _self.clone().into();
+        let binding = ::prost::Message::encode_to_vec(&proto);
+        let bz = binding.as_slice();
+        let tx_hash = hash(bz);
+
+        _self.tx_hash = tx_hash;
+        _self
+    }
+}
+
+impl Into<ProtoTx> for Tx {
+    fn into(self) -> ProtoTx {
+        ProtoTx {
+            from_addr: bytes_to_hex_string(self.from_addr.as_bytes()),
+            to_addr: bytes_to_hex_string(self.to_addr.as_bytes()),
+            amount: u256_to_szabo(self.amount.clone()),
+            tx_status: self.tx_status as i32,
+            tx_type: self.tx_type as i32,
+            created_at: self.created_at,
         }
     }
 }
