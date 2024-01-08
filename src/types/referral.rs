@@ -37,9 +37,9 @@ impl Referral {
 pub struct ReferralsOverview {
     pub total_referees: i64,
     // total of txs related to all referees
-    pub total_referees_txs: i32,
+    pub total_referees_txs: i64,
     // commision earned from referees
-    pub total_commision: String,
+    pub total_commision: i64,
     // unclaimed commision earned from referees
-    pub unclaimed_commission: String,
+    pub unclaimed_commission: i64,
 }
