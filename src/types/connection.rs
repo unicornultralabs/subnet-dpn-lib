@@ -44,12 +44,3 @@ pub struct VerifyProxyAccData {
     pub username: String,
     pub password: String,
 }
-
-
-#[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
-pub struct UserSetting
-{
-    pub proxy_acc_data: ProxyAccData,
-    pub user_bandwidth_price: UserBandwidthPrice,
-    pub user_region_info: UserRegionInfo,
-}
