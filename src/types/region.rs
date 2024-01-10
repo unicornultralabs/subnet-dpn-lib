@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use web3::types::Address;
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct UserRegionInfo {
