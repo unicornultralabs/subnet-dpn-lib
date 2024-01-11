@@ -26,6 +26,6 @@ pub struct TierPoint {
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum PointType {
-    Network,
-    Task,
+    ConnectionCompliment,
+    ConnectionPunishment,
 }
