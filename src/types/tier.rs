@@ -22,6 +22,7 @@ pub struct TierPoint {
     pub user_addr: String,
     pub points: i16,
     pub points_type: PointType,
+    pub created_at: i64,
 }
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
