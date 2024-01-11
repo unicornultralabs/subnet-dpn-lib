@@ -14,6 +14,7 @@ pub enum InternalTxType {
     Network,
     Task,
     Referral,
+    Commission
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
