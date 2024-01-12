@@ -1,14 +1,55 @@
+use crate::utils::{bytes_to_hex_string, hash::hash};
+use dpn_proto::session::ProtoSession;
 use ethers::types::H256;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use web3::types::{U256, Address};
+use web3::types::{Address, U256};
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserBandwidthPrice {
     pub user_addr: String,
     pub rate_per_kb: i64,
     pub rate_per_second: i64,
+}
+
+#[derive(Debug, Clone)]
+pub struct EphemeralSession {
+    pub hash: String,
+    pub peer_id: String,
+    pub client_id: String,
+    pub bandwidth_usage: u64,
+    pub last_active_at: i64,
+}
+
+impl EphemeralSession {
+    pub fn new(client_id: String, peer_id: String, last_active_at: i64) -> Self {
+        let mut _self = Self {
+            hash: "".to_string(),
+            peer_id,
+            client_id,
+            bandwidth_usage: 0,
+            last_active_at,
+        };
+
+        let proto: ProtoSession = _self.clone().into();
+        let binding = ::prost::Message::encode_to_vec(&proto);
+        let bz = binding.as_slice();
+        let session_hash = hash(bz);
+
+        _self.hash = bytes_to_hex_string(session_hash.as_bytes());
+        _self
+    }
+}
+
+impl Into<ProtoSession> for EphemeralSession {
+    fn into(self) -> ProtoSession {
+        ProtoSession {
+            provider_addr: self.peer_id,
+            client_addr: self.client_id,
+            handshaked_at: self.last_active_at,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -43,7 +84,7 @@ pub enum SessionTerminationReason {
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Session {
-    pub id: i64,
+    pub session_hash: H256,
     pub provider_addr: Address,
     pub client_addr: Address,
     pub rate_per_second: U256,
@@ -62,7 +103,7 @@ pub struct Session {
 
 impl Session {
     pub fn new(
-        id: i64,
+        session_hash: H256,
         provider_addr: Address,
         client_addr: Address,
         rate_per_second: U256,
@@ -79,7 +120,7 @@ impl Session {
         tx_hash: Option<H256>,
     ) -> Self {
         Self {
-            id,
+            session_hash,
             provider_addr,
             client_addr,
             rate_per_second,

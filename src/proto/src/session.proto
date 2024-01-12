@@ -1,0 +1,8 @@
+syntax = "proto3";
+package subnet_dpn.session;
+
+message ProtoSession {
+    string provider_addr = 1;
+    string client_addr = 2;
+    int64 handshaked_at = 3;
+}

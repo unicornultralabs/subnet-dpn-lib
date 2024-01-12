@@ -3,8 +3,6 @@ use std::{net::IpAddr, time::Duration};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use super::{bandwidth::UserBandwidthPrice, region::UserRegionInfo};
-
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
     PeerConnected(PeernodeInfo),
