@@ -16,19 +16,26 @@ pub struct UserBandwidthPrice {
 #[derive(Debug, Clone)]
 pub struct EphemeralSession {
     pub hash: String,
-    pub peer_id: String,
-    pub client_id: String,
+    pub client_identifier: String,
+    pub client_addr: String,
+    pub peer_addr: String,
     pub bandwidth_usage: u64,
     pub handshaked_at: u64,
     pub last_active_at: u64,
 }
 
 impl EphemeralSession {
-    pub fn new(client_id: String, peer_id: String, handshaked_at: u64) -> Self {
+    pub fn new(
+        client_identifier: String,
+        client_addr: String,
+        peer_addr: String,
+        handshaked_at: u64,
+    ) -> Self {
         let mut _self = Self {
             hash: "".to_string(),
-            peer_id,
-            client_id,
+            client_identifier,
+            client_addr,
+            peer_addr,
             bandwidth_usage: 0,
             handshaked_at,
             last_active_at: handshaked_at,
@@ -47,8 +54,9 @@ impl EphemeralSession {
 impl Into<ProtoSession> for EphemeralSession {
     fn into(self) -> ProtoSession {
         ProtoSession {
-            provider_addr: self.peer_id,
-            client_addr: self.client_id,
+            provider_addr: self.peer_addr,
+            client_addr: self.client_addr,
+            client_identifier: self.client_identifier,
             handshaked_at: self.handshaked_at as i64,
         }
     }
