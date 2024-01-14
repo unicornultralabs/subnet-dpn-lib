@@ -8,7 +8,7 @@ pub enum ConnectionEvent {
     PeerConnected(PeernodeInfo),
     /// peer_id
     PeerDisconnected(String),
-    /// peer_id, peer stats
+    /// session_hash, peer stats
     PeerStats(String, PeerStats),
     /// client_identifier, assigned_peer_id, handshaked_at
     ClientProcessed(String, String, u64),
@@ -23,9 +23,11 @@ pub struct PeernodeInfo {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStats {
-    pub peer_id: String,
-    pub client_id: String,
+    pub session_hash: String,
     pub download: u64,
+    pub upload: u64,
+    pub c_download: u64,
+    pub c_upload: u64,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
