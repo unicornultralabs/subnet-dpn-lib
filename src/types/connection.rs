@@ -10,8 +10,8 @@ pub enum ConnectionEvent {
     PeerDisconnected(String),
     /// peer_id, peer stats
     PeerStats(String, PeerStats),
-    /// client_id, assigned_peer_id
-    ClientProcessed(String, String),
+    /// client_identifier, assigned_peer_id, handshaked_at
+    ClientProcessed(String, String, u64),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]

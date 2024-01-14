@@ -19,17 +19,19 @@ pub struct EphemeralSession {
     pub peer_id: String,
     pub client_id: String,
     pub bandwidth_usage: u64,
-    pub last_active_at: i64,
+    pub handshaked_at: u64,
+    pub last_active_at: u64,
 }
 
 impl EphemeralSession {
-    pub fn new(client_id: String, peer_id: String, last_active_at: i64) -> Self {
+    pub fn new(client_id: String, peer_id: String, handshaked_at: u64) -> Self {
         let mut _self = Self {
             hash: "".to_string(),
             peer_id,
             client_id,
             bandwidth_usage: 0,
-            last_active_at,
+            handshaked_at,
+            last_active_at: handshaked_at,
         };
 
         let proto: ProtoSession = _self.clone().into();
@@ -47,7 +49,7 @@ impl Into<ProtoSession> for EphemeralSession {
         ProtoSession {
             provider_addr: self.peer_id,
             client_addr: self.client_id,
-            handshaked_at: self.last_active_at,
+            handshaked_at: self.handshaked_at as i64,
         }
     }
 }
