@@ -20,8 +20,8 @@ pub struct EphemeralSession {
     pub client_addr: String,
     pub peer_addr: String,
     pub bandwidth_usage: u64,
-    pub handshaked_at: u64,
-    pub last_active_at: u64,
+    pub handshaked_at: i64,
+    pub last_active_at: i64,
 }
 
 impl EphemeralSession {
@@ -29,7 +29,7 @@ impl EphemeralSession {
         client_identifier: String,
         client_addr: String,
         peer_addr: String,
-        handshaked_at: u64,
+        handshaked_at: i64,
     ) -> Self {
         let mut _self = Self {
             hash: "".to_string(),
@@ -57,7 +57,7 @@ impl Into<ProtoSession> for EphemeralSession {
             provider_addr: self.peer_addr,
             client_addr: self.client_addr,
             client_identifier: self.client_identifier,
-            handshaked_at: self.handshaked_at as i64,
+            handshaked_at: self.handshaked_at,
         }
     }
 }
