@@ -1,0 +1,13 @@
+syntax = "proto3";
+package subnet_dpn.proxy_acc_data;
+
+message ProtoProxyAccData {
+    string client_id = 1;
+    string password = 2;
+    int32 ip_rotation_period = 3;
+    string whitelist_ip_list = 4;
+    int32 city_geoname_id = 5;
+    int32 country_geoname_id = 6;
+    int32 rate_per_kb = 7;
+    int32 rate_per_second = 8;
+}
