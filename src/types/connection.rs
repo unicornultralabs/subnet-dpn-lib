@@ -39,10 +39,10 @@ pub struct ProxyAccData {
     pub password: String,
     pub ip_rotation_period: Duration,
     pub whitelist_ip_list: Vec<IpAddr>,
-    pub city_geoname_id: i32,
-    pub country_geoname_id: i32,
-    pub rate_per_kb: i32,
-    pub rate_per_second: i32,
+    pub city_geoname_id: i64,
+    pub country_geoname_id: i64,
+    pub rate_per_kb: i64,
+    pub rate_per_second: i64,
 }
 
 impl ProxyAccData {
@@ -51,10 +51,10 @@ impl ProxyAccData {
         password: String,
         ip_rotation_period: Duration,
         whitelist_ip_list: Vec<IpAddr>,
-        city_geoname_id: i32,
-        country_geoname_id: i32,
-        rate_per_kb: i32,
-        rate_per_second: i32,
+        city_geoname_id: i64,
+        country_geoname_id: i64,
+        rate_per_kb: i64,
+        rate_per_second: i64,
     ) -> Self {
         let mut _self = Self {
             client_id,
