@@ -41,6 +41,7 @@ pub struct ProxyAccData {
 
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct VerifyProxyAccData {
-    pub username: String,
-    pub password: String,
+    pub ip: Option<String>,
+    pub username: Option<String>,
+    pub password: Option<String>,
 }
