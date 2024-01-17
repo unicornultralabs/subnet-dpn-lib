@@ -36,7 +36,7 @@ pub struct ProxyAccData {
     pub id: String,
     pub password: String,
     pub ip_rotation_period: i64,
-    pub whitelisted_ip: String,
+    pub whitelisted_ip: Option<String>,
     pub user_addr: String,
     pub country_geoname_id: i64,
     pub city_geoname_id: i64,
@@ -49,7 +49,7 @@ impl ProxyAccData {
     pub fn new(
         password: String,
         ip_rotation_period: i64,
-        whitelisted_ip: String,
+        whitelisted_ip: Option<String>,
         user_addr: String,
         country_geoname_id: i64,
         city_geoname_id: i64,
