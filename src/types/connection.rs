@@ -48,6 +48,7 @@ pub struct ProxyAccData {
 impl ProxyAccData {
     pub fn new(
         client_id: String,
+        username: String,
         password: String,
         ip_rotation_period: Duration,
         whitelist_ip_list: Vec<IpAddr>,
@@ -58,7 +59,7 @@ impl ProxyAccData {
     ) -> Self {
         let mut _self = Self {
             client_id,
-            username: "".to_string(),
+            username,
             password,
             ip_rotation_period,
             whitelist_ip_list,
@@ -67,32 +68,8 @@ impl ProxyAccData {
             rate_per_kb,
             rate_per_second,
         };
-
-        let proto: ProtoProxyAccData = _self.clone().into();
-        let binding = ::prost::Message::encode_to_vec(&proto);
-        let bz = binding.as_slice();
-
-        _self.username = hash(bz).to_string();
+        
         _self
-    }
-}
-
-impl Into<ProtoProxyAccData> for ProxyAccData {
-    fn into(self) -> ProtoProxyAccData {
-        ProtoProxyAccData {
-            client_id: self.client_id,
-            password: self.password,
-            ip_rotation_period: self.ip_rotation_period.as_secs_f32() as i32,
-            whitelist_ip_list: self.whitelist_ip_list
-                .iter()
-                .map(|ip| ip.to_string())
-                .collect::<Vec<String>>()
-                .join(";"),
-            city_geoname_id: self.city_geoname_id,
-            country_geoname_id: self.country_geoname_id,
-            rate_per_kb: self.rate_per_kb,
-            rate_per_second: self.rate_per_second,
-        }
     }
 }
 
