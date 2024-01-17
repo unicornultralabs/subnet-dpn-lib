@@ -90,6 +90,7 @@ pub enum SessionTerminationReason {
     ClientInactive,
     PeerDisconnected,
     SystemShutdown,
+    ClientLowBalance,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
