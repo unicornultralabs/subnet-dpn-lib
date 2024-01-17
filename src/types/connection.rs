@@ -2,7 +2,7 @@ use dpn_proto::proxy_acc::ProtoProxyAcc;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::utils::hash::hash;
+use crate::utils::{bytes_to_hex_string, hash::hash};
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
@@ -74,7 +74,7 @@ impl ProxyAccData {
         let binding = ::prost::Message::encode_to_vec(&proto);
         let bz = binding.as_slice();
 
-        _self.id = hash(bz).to_string();
+        _self.id = bytes_to_hex_string(hash(bz).as_bytes());
         _self
     }
 }
