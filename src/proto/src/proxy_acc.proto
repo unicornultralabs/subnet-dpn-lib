@@ -1,0 +1,7 @@
+syntax = "proto3";
+package subnet_dpn.proxy_acc;
+
+message ProtoProxyAcc {
+    string user_addr = 1;
+    int64 created_at = 2;
+}
