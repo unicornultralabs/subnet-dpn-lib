@@ -20,6 +20,8 @@ pub struct PeernodeInfo {
     pub peer_id: String,
     pub ip_addr: String,
     pub throughput: f64,
+    pub city_geoname_id: u32,
+    pub country_geoname_id: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
