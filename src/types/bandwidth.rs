@@ -13,7 +13,7 @@ pub struct UserBandwidthPrice {
     pub rate_per_second: i64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EphemeralSession {
     pub hash: String,
     pub client_identifier: String,

@@ -4,6 +4,8 @@ use utoipa::ToSchema;
 
 use crate::utils::{bytes_to_hex_string, hash::hash};
 
+use super::bandwidth::EphemeralSession;
+
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
     PeerConnected(PeernodeInfo),
@@ -12,7 +14,7 @@ pub enum ConnectionEvent {
     /// session_hash, peer stats
     PeerStats(String, PeerStats),
     /// client_identifier, client_addr, peer_addr, handshaked_at timestamp
-    ClientProcessed(String, String, String, i64),
+    ClientProcessed(EphemeralSession),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
