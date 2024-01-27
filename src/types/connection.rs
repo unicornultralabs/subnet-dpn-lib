@@ -35,8 +35,8 @@ pub struct PeerStats {
     pub c_download: u64,
     pub c_upload: u64,
 }
-
-#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
+ 
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum PrioritizedIPLevel {
     /// Replacable by other IPs if prioritized IP is unavailable
     Normal,
