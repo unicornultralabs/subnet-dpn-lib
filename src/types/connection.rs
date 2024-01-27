@@ -35,6 +35,14 @@ pub struct PeerStats {
     pub c_upload: u64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PrioritizedIPLevel {
+    /// Replacable by other IPs if prioritized IP is unavailable
+    Normal,
+    /// Always use prioritized IP even if it is unavailable
+    Strict,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct ProxyAccData {
     pub id: String,
@@ -46,6 +54,8 @@ pub struct ProxyAccData {
     pub city_geoname_id: Option<i64>,
     pub rate_per_kb: i64,
     pub rate_per_second: i64,
+    pub prioritized_ip: Option<String>,
+    pub prioritized_ip_level: Option<PrioritizedIPLevel>,
     pub created_at: i64,
 }
 
@@ -59,6 +69,8 @@ impl ProxyAccData {
         city_geoname_id: Option<i64>,
         rate_per_kb: i64,
         rate_per_second: i64,
+        prioritized_ip: Option<String>,
+        prioritized_ip_level: Option<PrioritizedIPLevel>,
         created_at: i64,
     ) -> Self {
         let mut _self = Self {
@@ -71,6 +83,8 @@ impl ProxyAccData {
             city_geoname_id,
             rate_per_kb,
             rate_per_second,
+            prioritized_ip,
+            prioritized_ip_level,
             created_at,
         };
 
