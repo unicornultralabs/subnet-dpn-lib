@@ -1,4 +1,5 @@
 use dpn_proto::proxy_acc::ProtoProxyAcc;
+use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -35,7 +36,7 @@ pub struct PeerStats {
     pub c_upload: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize)]
 pub enum PrioritizedIPLevel {
     /// Replacable by other IPs if prioritized IP is unavailable
     Normal,
