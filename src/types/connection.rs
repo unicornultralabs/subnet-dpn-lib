@@ -14,8 +14,8 @@ pub enum ConnectionEvent {
     PeerDisconnected(String),
     /// session_hash, peer stats
     PeerStats(String, PeerStats),
-    /// client_identifier, client_addr, peer_addr, handshaked_at timestamp
-    ClientProcessed(EphemeralSession),
+    /// new session, old session
+    ClientProcessed(EphemeralSession, Option<EphemeralSession>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
