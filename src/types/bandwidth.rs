@@ -97,6 +97,7 @@ pub enum SessionTerminationReason {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Session {
     pub session_hash: H256,
+    pub client_identifier: String,
     pub provider_addr: Address,
     pub client_addr: Address,
     pub rate_per_second: U256,
@@ -116,6 +117,7 @@ pub struct Session {
 impl Session {
     pub fn new(
         session_hash: H256,
+        client_identifier: String,
         provider_addr: Address,
         client_addr: Address,
         rate_per_second: U256,
@@ -133,6 +135,7 @@ impl Session {
     ) -> Self {
         Self {
             session_hash,
+            client_identifier,
             provider_addr,
             client_addr,
             rate_per_second,
