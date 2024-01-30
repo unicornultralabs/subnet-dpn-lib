@@ -18,8 +18,8 @@ pub enum ConnectionEvent {
     PeerStats(String, PeerStats),
     /// new session, old session
     ClientProcessed(EphemeralSession, Option<EphemeralSession>),
-    /// identifier, current session
-    ClientInactive(String, EphemeralSession),
+    /// current session
+    ClientInactive(EphemeralSession),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
