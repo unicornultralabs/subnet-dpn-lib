@@ -3,9 +3,11 @@ use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
+use super::bandwidth::EphemeralSession;
 use crate::utils::{bytes_to_hex_string, hash::hash};
 
-use super::bandwidth::EphemeralSession;
+pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
+pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
@@ -16,6 +18,8 @@ pub enum ConnectionEvent {
     PeerStats(String, PeerStats),
     /// new session, old session
     ClientProcessed(EphemeralSession, Option<EphemeralSession>),
+    /// identifier, current session
+    ClientInactive(String, EphemeralSession),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -35,7 +39,7 @@ pub struct PeerStats {
     pub c_download: u64,
     pub c_upload: u64,
 }
- 
+
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum PrioritizedIPLevel {
     /// Replacable by other IPs if prioritized IP is unavailable
