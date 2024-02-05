@@ -11,6 +11,7 @@ pub struct UserTier {
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum Tier {
+    Bronze,
     Silver,
     Gold,
     Platinum,
