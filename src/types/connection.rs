@@ -3,7 +3,7 @@ use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use super::bandwidth::EphemeralSession;
+use super::bandwidth::{EphemeralSession, SessionTerminationReason};
 use crate::utils::{bytes_to_hex_string, hash::hash};
 
 pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
@@ -14,12 +14,10 @@ pub enum ConnectionEvent {
     PeerConnected(PeernodeInfo),
     /// peer_id
     PeerDisconnected(String),
-    /// session_hash, peer stats
-    PeerStats(String, PeerStats),
-    /// new session, old session
-    ClientProcessed(EphemeralSession, Option<EphemeralSession>),
-    /// current session
-    ClientInactive(EphemeralSession),
+    /// new session
+    SessionCreated(EphemeralSession),
+    /// terminated session
+    SessionTerminated(EphemeralSession, SessionTerminationReason),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
