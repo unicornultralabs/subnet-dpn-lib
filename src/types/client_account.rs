@@ -2,7 +2,7 @@ pub struct ClientAccount {
     pub user_id: String,
     pub username: String,
     pub salt: String,
-    pub hashed_password: String,
+    pub password_hashed: String,
 }
 
 impl ClientAccount {
@@ -10,13 +10,13 @@ impl ClientAccount {
         user_id: String, 
         username: String, 
         salt: String,
-        hashed_password: String,
+        password_hashed: String,
     ) -> Self {
         Self {
             user_id,
             username,
             salt,
-            hashed_password,
+            password_hashed,
         }
     }
 }
