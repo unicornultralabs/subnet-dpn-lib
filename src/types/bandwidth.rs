@@ -19,6 +19,8 @@ pub struct EphemeralSession {
     pub client_identifier: String,
     pub client_addr: String,
     pub peer_addr: String,
+    pub rate_per_kb: u64,
+    pub rate_per_second: u64,
     pub bandwidth_usage: u64,
     pub handshaked_at: i64,
     pub last_active_at: i64,
@@ -29,6 +31,8 @@ impl EphemeralSession {
         client_identifier: String,
         client_addr: String,
         peer_addr: String,
+        rate_per_kb: u64,
+        rate_per_second: u64,
         handshaked_at: i64,
     ) -> Self {
         let mut _self = Self {
@@ -36,6 +40,8 @@ impl EphemeralSession {
             client_identifier,
             client_addr,
             peer_addr,
+            rate_per_kb,
+            rate_per_second,
             bandwidth_usage: 0,
             handshaked_at,
             last_active_at: handshaked_at,
