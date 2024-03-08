@@ -17,7 +17,7 @@ pub enum ConnectionEvent {
     /// new session
     SessionCreated(EphemeralSession),
     /// terminated session
-    SessionTerminated(String, SessionTerminationReason),
+    SessionTerminated(EphemeralSession, SessionTerminationReason),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
