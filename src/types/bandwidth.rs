@@ -23,7 +23,7 @@ pub struct EphemeralSession {
     pub rate_per_second: u64,
     pub bandwidth_usage: u64,
     pub handshaked_at: i64,
-    pub last_active_at: i64,
+    pub end_at: i64,
 }
 
 impl EphemeralSession {
@@ -44,7 +44,7 @@ impl EphemeralSession {
             rate_per_second,
             bandwidth_usage: 0,
             handshaked_at,
-            last_active_at: handshaked_at,
+            end_at: 0,
         };
 
         let proto: ProtoSession = _self.clone().into();
