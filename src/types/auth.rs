@@ -38,6 +38,23 @@ pub struct AppleSSOInfo {
     pub token: String,
 }
 
+#[derive(serde::Deserialize, Debug, Clone, ToSchema)]
+pub struct UserSignInReq{
+    pub username: String,
+    pub password: String,
+}
+
+#[derive(serde::Deserialize, Debug, Clone, ToSchema)]
+pub struct UserSignUpReq{
+    pub username: String,
+    pub password: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, ToSchema)]
+pub struct UserSignUpResp {
+    pub user_id: String,
+}
+
 #[derive(Deserialize, Serialize, Debug, ToSchema)]
 pub struct SSORes {
     pub code: i16,
