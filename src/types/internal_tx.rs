@@ -14,7 +14,10 @@ pub enum InternalTxType {
     Network,
     Task,
     Referral,
-    Commission
+    /// deprecated: Comission now is PlatformFee or ReferralFee
+    Commission,
+    PlatformFee,
+    ReferralFee,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
