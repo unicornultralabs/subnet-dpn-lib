@@ -24,7 +24,6 @@ pub enum SSOInfo {
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
 pub struct GoogleSSOInfo {
     pub id: String,
-    pub email: String,
     pub display_name: String,
     pub photo_url: String,
     pub token: String,
@@ -32,7 +31,6 @@ pub struct GoogleSSOInfo {
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
 pub struct AppleSSOInfo {
-    pub email: String,
     pub full_name: String,
     pub code: String,
     pub token: String,
