@@ -44,7 +44,7 @@ impl EphemeralSession {
             rate_per_second,
             bandwidth_usage: 0,
             handshaked_at,
-            end_at: 0,
+            end_at: handshaked_at,
         };
 
         let proto: ProtoSession = _self.clone().into();
