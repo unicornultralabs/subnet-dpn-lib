@@ -5,6 +5,7 @@ use super::user::User;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserClaims {
+    pub session_id: String,
     pub user: User,
     pub exp: u64,
 }
