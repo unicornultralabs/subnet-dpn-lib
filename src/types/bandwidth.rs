@@ -24,6 +24,7 @@ pub struct EphemeralSession {
     pub bandwidth_usage: u64,
     pub handshaked_at: i64,
     pub end_at: i64,
+    pub login_session_id: String
 }
 
 impl EphemeralSession {
@@ -34,6 +35,7 @@ impl EphemeralSession {
         rate_per_kb: u64,
         rate_per_second: u64,
         handshaked_at: i64,
+        login_session_id: String
     ) -> Self {
         let mut _self = Self {
             hash: "".to_string(),
@@ -45,6 +47,7 @@ impl EphemeralSession {
             bandwidth_usage: 0,
             handshaked_at,
             end_at: handshaked_at,
+            login_session_id: login_session_id
         };
 
         let proto: ProtoSession = _self.clone().into();
