@@ -12,5 +12,9 @@ pub mod proxy_acc {
     include!(concat!(env!("OUT_DIR"), "/subnet_dpn.proxy_acc.rs"));
 }
 
+pub mod notification {
+    include!(concat!(env!("OUT_DIR"), "/subnet_dpn.noti.rs"));
+}
+
 #[cfg(test)]
 mod tests {}
