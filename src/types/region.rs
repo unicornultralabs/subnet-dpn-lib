@@ -21,3 +21,12 @@ impl UserRegionInfo {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+pub struct UserRegionInfoHistory {
+    pub geoname_id: i64,
+    pub is_country: bool,
+    pub name: String,
+    pub country_geoname_id: Option<i64>,
+    pub country_geoname_name: Option<String>
+}
