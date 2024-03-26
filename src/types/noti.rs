@@ -3,20 +3,23 @@ use dpn_proto::notification::ProtoNotification;
 use ethers::types::H256;
 use serde::Serialize;
 
+
 #[derive(Debug, Clone, Serialize)]
 pub struct Notification {
     pub id: H256,
     pub header: String,
     pub content: String,
+    pub level: String,
     pub created_at: i64,
 }
 
 impl Notification {
-    pub fn new(header: String, content: String, created_at: i64) -> Self {
+    pub fn new(header: String, content: String, level: String, created_at: i64) -> Self {
         let mut _self = Self {
             id: H256::zero(),
             header,
             content,
+            level,
             created_at,
         };
         let proto: ProtoNotification = _self.clone().into();
