@@ -1,4 +1,5 @@
 use crate::utils::{bytes_to_hex_string, hash::hash};
+use chrono::Utc;
 use dpn_proto::session::ProtoSession;
 use ethers::types::H256;
 use num_derive::FromPrimitive;
@@ -34,9 +35,10 @@ impl EphemeralSession {
         peer_addr: String,
         rate_per_kb: u64,
         rate_per_second: u64,
-        handshaked_at: i64,
         login_session_id: String
     ) -> Self {
+        let handshaked_at_micros = Utc::now().timestamp_micros();
+
         let mut _self = Self {
             hash: "".to_string(),
             client_identifier,
@@ -45,8 +47,8 @@ impl EphemeralSession {
             rate_per_kb,
             rate_per_second,
             bandwidth_usage: 0,
-            handshaked_at,
-            end_at: handshaked_at,
+            handshaked_at: handshaked_at_micros,
+            end_at: handshaked_at_micros,
             login_session_id: login_session_id
         };
 
@@ -56,6 +58,11 @@ impl EphemeralSession {
         let session_hash = hash(bz);
 
         _self.hash = bytes_to_hex_string(session_hash.as_bytes());
+
+        // TODO(rameight): we use microsecs to avoid hash collision
+        // now we convert microsecs to secs back
+        _self.handshaked_at /= 1_000_000;
+        _self.end_at /= 1_000_000;
         _self
     }
 }
@@ -67,23 +74,6 @@ impl Into<ProtoSession> for EphemeralSession {
             client_addr: self.client_addr,
             client_identifier: self.client_identifier,
             handshaked_at: self.handshaked_at,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub struct Stat {
-    pub peer_id: u32,
-    pub client_id: String,
-    pub session_id: u32,
-}
-
-impl Stat {
-    pub fn new(peer_id: u32, client_id: String, session_id: u32) -> Self {
-        Self {
-            peer_id: peer_id,
-            client_id: client_id,
-            session_id: session_id,
         }
     }
 }

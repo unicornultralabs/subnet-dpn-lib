@@ -1,0 +1,8 @@
+syntax = "proto3";
+package subnet_dpn.noti;
+
+message ProtoNotification {
+  string header = 1;
+  string content = 2;
+  int64 created_at = 3;
+}

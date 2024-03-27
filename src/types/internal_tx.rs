@@ -1,3 +1,4 @@
+use chrono::Utc;
 use dpn_proto::internal_tx::ProtoInternalTx;
 use ethers::types::H256;
 use num_derive::FromPrimitive;
@@ -38,8 +39,9 @@ impl InternalTx {
         amount: U256,
         tx_type: InternalTxType,
         tx_status: TxStatus,
-        created_at: i64,
     ) -> Self {
+        let created_at_micros = Utc::now().timestamp_micros();
+
         let mut _self = Self {
             tx_hash: H256::zero(),
             from_addr,
@@ -47,15 +49,18 @@ impl InternalTx {
             amount,
             tx_type,
             tx_status,
-            created_at,
+            created_at: created_at_micros,
         };
 
         let proto: ProtoInternalTx = _self.clone().into();
         let binding = ::prost::Message::encode_to_vec(&proto);
         let bz = binding.as_slice();
         let tx_hash = hash(bz);
-
         _self.tx_hash = tx_hash;
+
+        // TODO(rameight): we use microsecs to avoid hash collision
+        // now we convert microsecs to secs back
+        _self.created_at /= 1_000_000;
         _self
     }
 }
