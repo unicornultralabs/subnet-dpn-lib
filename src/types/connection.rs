@@ -38,6 +38,7 @@ pub struct PeerStats {
     pub upload: u64,
     pub c_download: u64,
     pub c_upload: u64,
+    pub login_session_id: String
 }
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
