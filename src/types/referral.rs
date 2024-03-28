@@ -36,8 +36,8 @@ impl Referral {
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct ReferralsOverview {
     pub total_referees: i64,
-    // total of txs related to all referees
-    pub total_referees_txs: i64,
+    // number of commission transactions from referees
+    pub total_commission_txs: i64,
     // commision earned from referees
     pub total_commision: i64,
     // unclaimed commision earned from referees
