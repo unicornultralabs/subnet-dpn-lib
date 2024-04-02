@@ -10,6 +10,12 @@ pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
 pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct MasternodeConnectionEvent {
+    masternode_id: String,
+    connection_event: ConnectionEvent
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum ConnectionEvent {
     PeerConnected(PeernodeInfo),
     /// peer_id
