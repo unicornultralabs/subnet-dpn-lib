@@ -39,6 +39,7 @@ pub struct PeernodeInfo {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStats {
+    pub masternode_id: String,
     pub session_hash: String,
     pub download: u64,
     pub upload: u64,
