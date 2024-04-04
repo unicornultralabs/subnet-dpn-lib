@@ -12,7 +12,7 @@ pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct MasternodeConnectionEvent {
     pub masternode_id: String,
-    pub connection_event: ConnectionEvent,
+    pub connection_event: ConnectionEvent
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -35,7 +35,6 @@ pub struct PeernodeInfo {
     pub rate_per_second: u64,
     pub city_geoname_id: u32,
     pub country_geoname_id: u32,
-    pub closed: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -46,7 +45,7 @@ pub struct PeerStats {
     pub upload: u64,
     pub c_download: u64,
     pub c_upload: u64,
-    pub login_session_id: String,
+    pub login_session_id: String
 }
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
