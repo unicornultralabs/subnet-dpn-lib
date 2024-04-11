@@ -34,6 +34,7 @@ pub enum DPNEvent {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerConnectedExtra {
+    pub masternode_id: String,
     pub peer_addr: String,
     pub login_session_id: String,
     pub info: PeernodeInfo,
@@ -41,17 +42,20 @@ pub struct PeerConnectedExtra {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerDisconnectedExtra {
+    pub masternode_id: String,
     pub peer_addr: String,
     pub login_session_id: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionCreatedExtra {
+    pub masternode_id: String,
     pub session: EphemeralSession,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionTerminatedExtra {
+    pub masternode_id: String,
     pub session: EphemeralSession,
     pub reason: SessionTerminationReason,
 }
