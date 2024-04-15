@@ -33,7 +33,7 @@ impl Referral {
     }
 }
 
-#[derive(Serialize, Deserialize, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct ReferralsOverview {
     pub total_referees: i64,
     // number of commission transactions from referees
