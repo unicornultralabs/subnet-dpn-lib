@@ -1,10 +1,11 @@
+use chrono::Utc;
 use dpn_proto::tx::ProtoTx;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use web3::types::{Address, H256, U256};
 
-use crate::utils::{bytes_to_hex_string, u256_to_szabo, hash::hash};
+use crate::utils::{bytes_to_hex_string, hash::hash, u256_to_szabo};
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
 pub enum TxType {
@@ -39,8 +40,9 @@ impl Tx {
         tx_type: TxType,
         tx_status: TxStatus,
         chain_tx_hash: Option<H256>,
-        created_at: i64,
     ) -> Self {
+        let created_at_micros = Utc::now().timestamp_micros();
+
         let mut _self = Self {
             tx_hash: H256::zero(),
             from_addr,
@@ -49,7 +51,7 @@ impl Tx {
             tx_type,
             tx_status,
             chain_tx_hash,
-            created_at,
+            created_at: created_at_micros,
         };
 
         let proto: ProtoTx = _self.clone().into();
@@ -58,6 +60,10 @@ impl Tx {
         let tx_hash = hash(bz);
 
         _self.tx_hash = tx_hash;
+
+        // TODO(rameight): we use microsecs to avoid hash collision
+        // now we convert microsecs to secs back
+        _self.created_at /= 1_000_000;
         _self
     }
 }
