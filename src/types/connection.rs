@@ -3,28 +3,10 @@ use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use super::bandwidth::{EphemeralSession, SessionTerminationReason};
 use crate::utils::{bytes_to_hex_string, hash::hash};
 
 pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
 pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
-
-#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub struct MasternodeConnectionEvent {
-    pub masternode_id: String,
-    pub connection_event: ConnectionEvent
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub enum ConnectionEvent {
-    PeerConnected(PeernodeInfo),
-    /// peer_id
-    PeerDisconnected(String),
-    /// new session
-    SessionCreated(EphemeralSession),
-    /// terminated session
-    SessionTerminated(EphemeralSession, SessionTerminationReason),
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct PeernodeInfo {
@@ -45,7 +27,7 @@ pub struct PeerStats {
     pub upload: u64,
     pub c_download: u64,
     pub c_upload: u64,
-    pub login_session_id: String
+    pub login_session_id: String,
 }
 
 #[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
