@@ -78,7 +78,7 @@ impl RedisService for RedisServiceImpl {
 
     async fn set_provider_geo(
         self: Arc<Self>,
-        provider_addr: String,
+        login_session_id: String,
         geo: Geo,
     ) -> Result<(), Error> {
         let mut conn = self
@@ -88,7 +88,7 @@ impl RedisService for RedisServiceImpl {
 
         match conn.hset::<String, String, String, usize>(
             String::from(PROVIDER_GEO_KEY),
-            provider_addr,
+            login_session_id,
             serde_json::to_string(&geo).unwrap(),
         ) {
             Ok(_) => Ok(()),
@@ -96,18 +96,18 @@ impl RedisService for RedisServiceImpl {
         }
     }
 
-    async fn get_provider_geo(self: Arc<Self>, provider_addr: String) -> Result<Geo, Error> {
+    async fn get_provider_geo(self: Arc<Self>, login_session_id: String) -> Result<Geo, Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
         let geo_str: String = conn
-            .hget(PROVIDER_GEO_KEY, provider_addr.clone())
+            .hget(PROVIDER_GEO_KEY, login_session_id.clone())
             .map_err(|e| {
                 anyhow!(
                     "redis cannot get key={}:{} err={}",
                     PROVIDER_PRICE_KEY,
-                    provider_addr,
+                    login_session_id,
                     e
                 )
             })?;
