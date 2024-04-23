@@ -126,7 +126,7 @@ impl RedisService for RedisServiceImpl {
 }
 
 impl RedisServiceImpl {
-    pub async fn new(redis_uri: String) -> Result<Self> {
+    pub fn new(redis_uri: String) -> Result<Self> {
         let client = redis::Client::open(redis_uri)?;
         Ok(Self { client })
     }
