@@ -9,6 +9,13 @@ pub struct UserClaims {
     pub exp: u64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct UserClaimsV2 {
+    pub user: User,
+    pub exp: u64,
+    pub login_session_id: String,
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone, ToSchema)]
 pub struct AuthTokens {
     pub access_token: String,
@@ -37,13 +44,13 @@ pub struct AppleSSOInfo {
 }
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
-pub struct UserSignInReq{
+pub struct UserSignInReq {
     pub username: String,
     pub password: String,
 }
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
-pub struct UserSignUpReq{
+pub struct UserSignUpReq {
     pub username: String,
     pub password: String,
 }
