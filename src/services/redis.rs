@@ -43,7 +43,7 @@ impl RedisService for RedisServiceImpl {
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
 
-        match conn.hset::<String, String, String, String>(
+        match conn.hset::<String, String, String, usize>(
             String::from(PROVIDER_PRICE_KEY),
             provider_addr,
             serde_json::to_string(&price).unwrap(),
@@ -86,7 +86,7 @@ impl RedisService for RedisServiceImpl {
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
 
-        match conn.hset::<String, String, String, String>(
+        match conn.hset::<String, String, String, usize>(
             String::from(PROVIDER_GEO_KEY),
             provider_addr,
             serde_json::to_string(&geo).unwrap(),
