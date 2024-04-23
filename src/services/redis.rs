@@ -1,15 +1,14 @@
-use anyhow::anyhow;
-use anyhow::{Error, Result};
+use anyhow::{anyhow, Error, Result};
 use async_trait::async_trait;
 use mockall::automock;
-use redis::Commands;
+use redis::Commands as _;
 use std::{fmt::Debug, sync::Arc};
 
 use crate::types::bandwidth::UserBandwidthPrice;
-use crate::types::region::UserRegionInfo;
+use crate::types::geo::Geo;
 
 const PROVIDER_PRICE_KEY: &str = "provider.price";
-const PROVIDER_REGION_KEY: &str = "provider.region";
+const PROVIDER_GEO_KEY: &str = "provider.geo";
 
 #[automock]
 #[async_trait]
@@ -23,12 +22,8 @@ pub trait RedisService: Debug + Send + Sync + 'static {
         self: Arc<Self>,
         provider_addr: String,
     ) -> Result<UserBandwidthPrice, Error>;
-    async fn set_provider_region(
-        self: Arc<Self>,
-        provider_addr: String,
-        region: UserRegionInfo,
-    ) -> Result<()>;
-    async fn get_provider_region(self: Arc<Self>, provider_addr: String) -> Result<UserRegionInfo>;
+    async fn set_provider_geo(self: Arc<Self>, provider_addr: String, geo: Geo) -> Result<()>;
+    async fn get_provider_geo(self: Arc<Self>, provider_addr: String) -> Result<Geo>;
 }
 
 #[derive(Debug)]
@@ -81,10 +76,10 @@ impl RedisService for RedisServiceImpl {
         Ok(price)
     }
 
-    async fn set_provider_region(
+    async fn set_provider_geo(
         self: Arc<Self>,
         provider_addr: String,
-        region: UserRegionInfo,
+        geo: Geo,
     ) -> Result<(), Error> {
         let mut conn = self
             .client
@@ -92,25 +87,22 @@ impl RedisService for RedisServiceImpl {
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
 
         match conn.hset::<String, String, String, String>(
-            String::from(PROVIDER_REGION_KEY),
+            String::from(PROVIDER_GEO_KEY),
             provider_addr,
-            serde_json::to_string(&region).unwrap(),
+            serde_json::to_string(&geo).unwrap(),
         ) {
             Ok(_) => Ok(()),
-            Err(e) => Err(anyhow!("redis failed to insert user region err={}", e)),
+            Err(e) => Err(anyhow!("redis failed to insert geography err={}", e)),
         }
     }
 
-    async fn get_provider_region(
-        self: Arc<Self>,
-        provider_addr: String,
-    ) -> Result<UserRegionInfo, Error> {
+    async fn get_provider_geo(self: Arc<Self>, provider_addr: String) -> Result<Geo, Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        let price_str: String = conn
-            .hget(PROVIDER_REGION_KEY, provider_addr.clone())
+        let geo_str: String = conn
+            .hget(PROVIDER_GEO_KEY, provider_addr.clone())
             .map_err(|e| {
                 anyhow!(
                     "redis cannot get key={}:{} err={}",
@@ -119,9 +111,9 @@ impl RedisService for RedisServiceImpl {
                     e
                 )
             })?;
-        let region = serde_json::from_str::<UserRegionInfo>(&price_str)
-            .map_err(|e| anyhow!("redis failed to decode user region err={}", e))?;
-        Ok(region)
+        let geo = serde_json::from_str::<Geo>(&geo_str)
+            .map_err(|e| anyhow!("redis failed to decode geography err={}", e))?;
+        Ok(geo)
     }
 }
 
