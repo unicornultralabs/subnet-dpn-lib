@@ -22,8 +22,16 @@ pub trait RedisService: Debug + Send + Sync + 'static {
         self: Arc<Self>,
         provider_addr: String,
     ) -> Result<UserBandwidthPrice, Error>;
+
     async fn set_provider_geo(self: Arc<Self>, provider_addr: String, geo: Geo) -> Result<()>;
     async fn get_provider_geo(self: Arc<Self>, provider_addr: String) -> Result<Geo>;
+
+    async fn set_proxy_acc(
+        self: Arc<Self>,
+        login_session_id: String,
+        geo: Geo,
+    ) -> Result<(), Error>;
+    async fn get_proxy_acc(self: Arc<Self>, login_session_id: String) -> Result<Geo, Error>;
 }
 
 #[derive(Debug)]
@@ -97,6 +105,46 @@ impl RedisService for RedisServiceImpl {
     }
 
     async fn get_provider_geo(self: Arc<Self>, login_session_id: String) -> Result<Geo, Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        let geo_str: String = conn
+            .hget(PROVIDER_GEO_KEY, login_session_id.clone())
+            .map_err(|e| {
+                anyhow!(
+                    "redis cannot get key={}:{} err={}",
+                    PROVIDER_PRICE_KEY,
+                    login_session_id,
+                    e
+                )
+            })?;
+        let geo = serde_json::from_str::<Geo>(&geo_str)
+            .map_err(|e| anyhow!("redis failed to decode geography err={}", e))?;
+        Ok(geo)
+    }
+
+    async fn set_proxy_acc(
+        self: Arc<Self>,
+        login_session_id: String,
+        geo: Geo,
+    ) -> Result<(), Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+
+        match conn.hset::<String, String, String, usize>(
+            String::from(PROVIDER_GEO_KEY),
+            login_session_id,
+            serde_json::to_string(&geo).unwrap(),
+        ) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(anyhow!("redis failed to insert geography err={}", e)),
+        }
+    }
+
+    async fn get_proxy_acc(self: Arc<Self>, login_session_id: String) -> Result<Geo, Error> {
         let mut conn = self
             .client
             .get_connection()
