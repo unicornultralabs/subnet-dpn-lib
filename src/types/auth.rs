@@ -7,12 +7,6 @@ use super::user::User;
 pub struct UserClaims {
     pub user: User,
     pub exp: u64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub struct UserClaimsV2 {
-    pub user: User,
-    pub exp: u64,
     pub login_session_id: String,
 }
 
