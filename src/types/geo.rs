@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+pub const DEFAULT_CONTINENTAL_CODE: &str = "DEFAULT";
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Geo {
     pub city: Option<City>,
