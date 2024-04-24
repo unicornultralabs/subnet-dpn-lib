@@ -53,3 +53,14 @@ impl RedisService {
         Ok(proxy_acc)
     }
 }
+
+pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, String) {
+    (
+        "peer_geo".to_owned(),
+        format!("{}_{}", masternode_id.clone(), login_session_id.clone()),
+    )
+}
+
+pub fn get_price_kf(peer_addr: String) -> (String, String) {
+    ("peer_price".to_owned(), peer_addr)
+}
