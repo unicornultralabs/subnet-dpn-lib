@@ -19,7 +19,7 @@ impl RedisService {
         Ok(Self { client })
     }
 
-    pub fn set<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
+    pub fn set_hash<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
     where
         T: Serialize,
     {
@@ -37,7 +37,7 @@ impl RedisService {
         }
     }
 
-    pub fn get<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
+    pub fn get_hash<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
     where
         T: Clone + DeserializeOwned,
     {
