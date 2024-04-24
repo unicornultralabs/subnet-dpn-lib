@@ -1,6 +1,4 @@
 use anyhow::{anyhow, Error, Result};
-use async_trait::async_trait;
-use mockall::automock;
 use redis::Commands as _;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -10,26 +8,18 @@ pub const PROVIDER_PRICE_KEY: &str = "provider.price";
 pub const PROVIDER_GEO_KEY: &str = "provider.geo";
 pub const PROXY_ACC_KEY: &str = "proxyacc";
 
-#[automock]
-#[async_trait]
-pub trait RedisService: Debug + Send + Sync + 'static {
-    fn set<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
-    where
-        T: Serialize + 'static;
-
-    fn get<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
-    where
-        T: Clone + DeserializeOwned + 'static;
-}
-
 #[derive(Debug)]
 pub struct RedisServiceImpl {
     client: redis::Client,
 }
 
-#[async_trait]
-impl RedisService for RedisServiceImpl {
-    fn set<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
+impl RedisServiceImpl {
+    pub fn new(redis_uri: String) -> Result<Self> {
+        let client = redis::Client::open(redis_uri)?;
+        Ok(Self { client })
+    }
+
+    pub fn set<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
     where
         T: Serialize,
     {
@@ -47,7 +37,7 @@ impl RedisService for RedisServiceImpl {
         }
     }
 
-    fn get<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
+    pub fn get<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
     where
         T: Clone + DeserializeOwned,
     {
@@ -61,12 +51,5 @@ impl RedisService for RedisServiceImpl {
         let proxy_acc = serde_json::from_str::<T>(&obj_str)
             .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
         Ok(proxy_acc)
-    }
-}
-
-impl RedisServiceImpl {
-    pub fn new(redis_uri: String) -> Result<Self> {
-        let client = redis::Client::open(redis_uri)?;
-        Ok(Self { client })
     }
 }
