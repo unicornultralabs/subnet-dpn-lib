@@ -9,11 +9,11 @@ pub const PROVIDER_GEO_KEY: &str = "provider.geo";
 pub const PROXY_ACC_KEY: &str = "proxyacc";
 
 #[derive(Debug)]
-pub struct RedisServiceImpl {
+pub struct RedisService {
     client: redis::Client,
 }
 
-impl RedisServiceImpl {
+impl RedisService {
     pub fn new(redis_uri: String) -> Result<Self> {
         let client = redis::Client::open(redis_uri)?;
         Ok(Self { client })
