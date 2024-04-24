@@ -7,6 +7,7 @@ use super::user::User;
 pub struct UserClaims {
     pub user: User,
     pub exp: u64,
+    pub login_session_id: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, ToSchema)]
@@ -37,13 +38,13 @@ pub struct AppleSSOInfo {
 }
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
-pub struct UserSignInReq{
+pub struct UserSignInReq {
     pub username: String,
     pub password: String,
 }
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
-pub struct UserSignUpReq{
+pub struct UserSignUpReq {
     pub username: String,
     pub password: String,
 }
