@@ -4,10 +4,6 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::{fmt::Debug, sync::Arc};
 
-pub const PROVIDER_PRICE_KEY: &str = "provider.price";
-pub const PROVIDER_GEO_KEY: &str = "provider.geo";
-pub const PROXY_ACC_KEY: &str = "proxyacc";
-
 #[derive(Debug)]
 pub struct RedisService {
     client: redis::Client,
@@ -63,4 +59,8 @@ pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, S
 
 pub fn get_price_kf(peer_addr: String) -> (String, String) {
     ("peer_price".to_owned(), peer_addr)
+}
+
+pub fn get_proxy_acc_kf(id: String) -> (String, String) {
+    ("proxy_acc".to_owned(), id)
 }
