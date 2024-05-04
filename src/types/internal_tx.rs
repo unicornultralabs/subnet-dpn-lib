@@ -19,6 +19,7 @@ pub enum InternalTxType {
     Commission,
     PlatformFee,
     ReferralFee,
+    Transfer,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
