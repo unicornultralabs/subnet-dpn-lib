@@ -37,6 +37,7 @@ pub struct OnchainWithdrawalRequest {
     pub from: String,
     pub to: String,
     pub amount: u64,
+    pub tx_hash: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
