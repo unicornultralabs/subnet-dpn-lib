@@ -48,6 +48,74 @@ impl RedisService {
             .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
         Ok(proxy_acc)
     }
+
+    pub fn set_sorted_set(
+        self: Arc<Self>,
+        key: String,
+        score: u32,
+        value: u32,
+    ) -> Result<(), Error>
+    {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        match conn.zadd::<String, u32, u32, ()>(key, value, score) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(anyhow!("redis failed to insert peer into peer queue err={}", e)),
+        }
+    }
+
+    pub fn remove_sorted_set_item(self: Arc<Self>, key: String, value: u32) -> Result<(), anyhow::Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+
+        match conn.zrem::<String, u32, usize>(key, value) { 
+            Ok(_) => Ok(()),
+            Err(e) => Err(anyhow!("redis failed to remove peer in peer queue err={}", e)),
+        }
+    }
+
+    pub fn set_score_of_all_peer(self: Arc<Self>, key: String, score: u32) -> Result<(), anyhow::Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+
+        let elements: Vec<(u32, u32)> = conn
+            .zrange_withscores(key.clone(), 0, -1)
+            .map_err(|e| anyhow!("redis failed to get peer queue err={}", e))?;
+
+        for (value, _) in elements {
+            conn.zadd::<String, u32, u32, ()>(key.clone(), value, score).map_err(|e| {
+                anyhow!("redis failed to update sorted set score to 0 err={}", e)
+            })?;
+        }
+
+        Ok(())
+    }
+
+    pub fn get_all_sorted_set(self: Arc<Self>, key: String) -> Result<Vec<(u32, u32)>, Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        
+        let elements: Vec<(u32, u32)> = conn
+            .zrange_withscores(key.clone(), 0, -1)
+            .map_err(|e| anyhow!("redis failed to get peer queue err={}", e))?;
+        
+        let mut result : Vec<(u32, u32)> = elements
+            .into_iter()
+            .map(|(value, score)| (value, score))
+            .collect();
+
+        result.sort_by_key(|(_value, score)| *score); 
+        
+        Ok(result)
+    }
 }
 
 pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, String) {
@@ -55,6 +123,10 @@ pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, S
         "peer_geo".to_owned(),
         format!("{}_{}", masternode_id.clone(), login_session_id.clone()),
     )
+}
+
+pub fn get_peer_queue_k() -> String {
+    "peer_queue".to_owned()
 }
 
 pub fn get_price_kf(peer_addr: String) -> (String, String) {
