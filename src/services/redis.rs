@@ -12,6 +12,9 @@ pub struct RedisService {
 impl RedisService {
     pub fn new(redis_uri: String) -> Result<Self> {
         let client = redis::Client::open(redis_uri)?;
+        if let Err(e) = client.get_connection() {
+            return Err(anyhow!("cannot connect to redis err={}", e));
+        }
         Ok(Self { client })
     }
 
