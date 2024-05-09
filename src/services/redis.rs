@@ -53,6 +53,20 @@ impl RedisService {
         Ok(proxy_acc)
     }
 
+    pub fn remove_hash(self: Arc<Self>, key: String, field: String) -> Result<(), anyhow::Error> {
+        let mut conn = self.client.get_connection()
+            .map_err(|e| anyhow!("Cannot get connection: {}", e))?;
+        
+        let result: i32 = conn.hdel(&key, &field)
+            .map_err(|e| anyhow!("Failed to delete hash: {}", e))?;
+        
+        if result == 0 {
+            return Err(anyhow!("Field not found: key={} field={}", key, field));
+        }
+        
+        Ok(())
+    }
+
     pub fn set_sorted_set(
         self: Arc<Self>,
         key: String,
@@ -126,6 +140,13 @@ pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, S
     (
         "peer_geo".to_owned(),
         format!("{}_{}", masternode_id.clone(), login_session_id.clone()),
+    )
+}
+
+pub fn get_client_peer_kf(masternode_id: String, client_identifier: String) -> (String, String) {
+    (
+        "client_peer".to_owned(),
+        format!("{}_{}", masternode_id.clone(), client_identifier.clone()),
     )
 }
 
