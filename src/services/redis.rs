@@ -58,31 +58,44 @@ impl RedisService {
         key: String,
         score: u32,
         value: u32,
-    ) -> Result<(), Error>
-    {
+    ) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
         match conn.zadd::<String, u32, u32, ()>(key, value, score) {
             Ok(_) => Ok(()),
-            Err(e) => Err(anyhow!("redis failed to insert peer into peer queue err={}", e)),
+            Err(e) => Err(anyhow!(
+                "redis failed to insert peer into peer queue err={}",
+                e
+            )),
         }
     }
 
-    pub fn remove_sorted_set_item(self: Arc<Self>, key: String, value: u32) -> Result<(), anyhow::Error> {
+    pub fn remove_sorted_set_item(
+        self: Arc<Self>,
+        key: String,
+        value: u32,
+    ) -> Result<(), anyhow::Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
 
-        match conn.zrem::<String, u32, usize>(key, value) { 
+        match conn.zrem::<String, u32, usize>(key, value) {
             Ok(_) => Ok(()),
-            Err(e) => Err(anyhow!("redis failed to remove peer in peer queue err={}", e)),
+            Err(e) => Err(anyhow!(
+                "redis failed to remove peer in peer queue err={}",
+                e
+            )),
         }
     }
 
-    pub fn set_score_of_all_peer(self: Arc<Self>, key: String, score: u32) -> Result<(), anyhow::Error> {
+    pub fn set_score_for_all(
+        self: Arc<Self>,
+        key: String,
+        score: u32,
+    ) -> Result<(), anyhow::Error> {
         let mut conn = self
             .client
             .get_connection()
@@ -90,12 +103,11 @@ impl RedisService {
 
         let elements: Vec<(u32, u32)> = conn
             .zrange_withscores(key.clone(), 0, -1)
-            .map_err(|e| anyhow!("redis failed to get peer queue err={}", e))?;
+            .map_err(|e| anyhow!("redis failed to get sorted set err={}", e))?;
 
         for (value, _) in elements {
-            conn.zadd::<String, u32, u32, ()>(key.clone(), value, score).map_err(|e| {
-                anyhow!("redis failed to update sorted set score to 0 err={}", e)
-            })?;
+            conn.zadd::<String, u32, u32, ()>(key.clone(), value, score)
+                .map_err(|e| anyhow!("redis failed to set scores err={}", e))?;
         }
 
         Ok(())
@@ -106,19 +118,30 @@ impl RedisService {
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        
+
         let elements: Vec<(u32, u32)> = conn
             .zrange_withscores(key.clone(), 0, -1)
             .map_err(|e| anyhow!("redis failed to get peer queue err={}", e))?;
-        
-        let mut result : Vec<(u32, u32)> = elements
+
+        let mut result: Vec<(u32, u32)> = elements
             .into_iter()
             .map(|(value, score)| (value, score))
             .collect();
 
-        result.sort_by_key(|(_value, score)| *score); 
-        
+        result.sort_by_key(|(_value, score)| *score);
+
         Ok(result)
+    }
+
+    /// this function is used to delete data of given key
+    pub fn delete(self: Arc<Self>, key: String) -> Result<(), Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+
+        conn.del(key.clone())
+            .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e))
     }
 }
 
