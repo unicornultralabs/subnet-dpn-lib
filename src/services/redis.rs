@@ -2,7 +2,7 @@ use anyhow::{anyhow, Error, Result};
 use redis::Commands as _;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use std::{fmt::Debug, sync::Arc};
+use std::{collections::HashMap, fmt::Debug, sync::Arc};
 
 #[derive(Debug)]
 pub struct RedisService {
@@ -53,7 +53,7 @@ impl RedisService {
         Ok(proxy_acc)
     }
 
-    pub fn get_all<T>(self: Arc<Self>, key: String) -> Result<Vec<T>, Error>
+    pub fn get_all<T>(self: Arc<Self>, key: String) -> Result<Vec<(String, T)>, Error>
     where
         T: Clone + DeserializeOwned,
     {
@@ -61,12 +61,16 @@ impl RedisService {
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        let obj_str: String = conn
+        let result: HashMap<String, String> = conn
             .hgetall(key.clone())
             .map_err(|e| anyhow!("redis cannot get key={} err={}", key, e))?;
-        let proxy_acc = serde_json::from_str::<Vec<T>>(&obj_str)
-            .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
-        Ok(proxy_acc)
+        let mut rs: Vec<(String, T)> = vec![];
+        for (key, obj_str) in result.iter() {
+            let proxy_acc = serde_json::from_str::<T>(&obj_str)
+                .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
+            rs.push((key.clone(), proxy_acc.clone()));
+        }
+        Ok(rs)
     }
 
     pub fn set_sorted_set(
