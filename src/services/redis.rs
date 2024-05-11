@@ -19,7 +19,7 @@ impl RedisService {
         Ok(Self { client })
     }
 
-    pub fn set_hash<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
+    pub fn hset<T>(self: Arc<Self>, key: String, field: String, obj: T) -> Result<(), Error>
     where
         T: Serialize,
     {
@@ -37,7 +37,7 @@ impl RedisService {
         }
     }
 
-    pub fn get_hash<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
+    pub fn hget<T>(self: Arc<Self>, key: String, field: String) -> Result<T, Error>
     where
         T: Clone + DeserializeOwned,
     {
@@ -48,12 +48,12 @@ impl RedisService {
         let obj_str: String = conn
             .hget(key.clone(), field.clone())
             .map_err(|e| anyhow!("redis cannot get key={}:{} err={}", key, field, e))?;
-        let proxy_acc = serde_json::from_str::<T>(&obj_str)
+        let t = serde_json::from_str::<T>(&obj_str)
             .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
-        Ok(proxy_acc)
+        Ok(t)
     }
 
-    pub fn get_all<T>(self: Arc<Self>, key: String) -> Result<Vec<(String, T)>, Error>
+    pub fn hgetall<T>(self: Arc<Self>, key: String) -> Result<Vec<(String, T)>, Error>
     where
         T: Clone + DeserializeOwned,
     {
@@ -73,12 +73,7 @@ impl RedisService {
         Ok(rs)
     }
 
-    pub fn set_sorted_set(
-        self: Arc<Self>,
-        key: String,
-        score: u32,
-        value: u32,
-    ) -> Result<(), Error> {
+    pub fn zadd(self: Arc<Self>, key: String, score: u32, value: u32) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
@@ -92,11 +87,7 @@ impl RedisService {
         }
     }
 
-    pub fn remove_sorted_set_item(
-        self: Arc<Self>,
-        key: String,
-        value: u32,
-    ) -> Result<(), anyhow::Error> {
+    pub fn zrem(self: Arc<Self>, key: String, value: u32) -> Result<(), anyhow::Error> {
         let mut conn = self
             .client
             .get_connection()
@@ -111,11 +102,7 @@ impl RedisService {
         }
     }
 
-    pub fn set_score_for_all(
-        self: Arc<Self>,
-        key: String,
-        score: u32,
-    ) -> Result<(), anyhow::Error> {
+    pub fn zsetall(self: Arc<Self>, key: String, score: u32) -> Result<(), anyhow::Error> {
         let mut conn = self
             .client
             .get_connection()
@@ -133,7 +120,7 @@ impl RedisService {
         Ok(())
     }
 
-    pub fn get_all_sorted_set(self: Arc<Self>, key: String) -> Result<Vec<(u32, u32)>, Error> {
+    pub fn zgetall(self: Arc<Self>, key: String) -> Result<Vec<(u32, u32)>, Error> {
         let mut conn = self
             .client
             .get_connection()
@@ -154,7 +141,7 @@ impl RedisService {
     }
 
     /// this function is used to delete data of given key
-    pub fn delete(self: Arc<Self>, key: String) -> Result<(), Error> {
+    pub fn del(self: Arc<Self>, key: String) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
