@@ -151,7 +151,11 @@ impl RedisService {
             .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e))
     }
 
-    pub async fn publish<T>(self: Arc<Self>, chan_name: String, obj: T) -> Result<(), Error>
+    pub async fn publish<T>(
+        self: Arc<Self>,
+        chan_name: String,
+        obj_str: String,
+    ) -> Result<(), Error>
     where
         T: Clone + Serialize,
     {
@@ -159,7 +163,7 @@ impl RedisService {
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        conn.publish(&chan_name, serde_json::to_string(&obj).unwrap())?;
+        conn.publish(&chan_name, &obj_str)?;
         Ok(())
     }
 
