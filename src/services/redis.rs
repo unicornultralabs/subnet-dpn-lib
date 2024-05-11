@@ -186,3 +186,7 @@ pub fn get_price_kf(peer_addr: String) -> (String, String) {
 pub fn get_proxy_acc_kf(id: String) -> (String, String) {
     ("proxy_acc".to_owned(), id)
 }
+
+pub fn get_proxy_acc_chan() -> String {
+    "proxy_acc_updated".to_string()
+}
