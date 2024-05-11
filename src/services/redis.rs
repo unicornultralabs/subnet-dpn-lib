@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Error, Result};
-use redis::Commands as _;
+use redis::{Commands as _, Connection, RedisResult};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
@@ -149,6 +149,22 @@ impl RedisService {
 
         conn.del(key.clone())
             .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e))
+    }
+
+    pub async fn publish<T>(self: Arc<Self>, chan_name: String, obj: T) -> Result<(), Error>
+    where
+        T: Clone + Serialize,
+    {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        conn.publish(&chan_name, serde_json::to_string(&obj).unwrap())?;
+        Ok(())
+    }
+
+    pub async fn get_conn(self: Arc<Self>) -> RedisResult<Connection> {
+        self.client.get_connection()
     }
 }
 
