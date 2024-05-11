@@ -53,6 +53,22 @@ impl RedisService {
         Ok(proxy_acc)
     }
 
+    pub fn get_all<T>(self: Arc<Self>, key: String) -> Result<Vec<T>, Error>
+    where
+        T: Clone + DeserializeOwned,
+    {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        let obj_str: String = conn
+            .hgetall(key.clone())
+            .map_err(|e| anyhow!("redis cannot get key={} err={}", key, e))?;
+        let proxy_acc = serde_json::from_str::<Vec<T>>(&obj_str)
+            .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
+        Ok(proxy_acc)
+    }
+
     pub fn set_sorted_set(
         self: Arc<Self>,
         key: String,
