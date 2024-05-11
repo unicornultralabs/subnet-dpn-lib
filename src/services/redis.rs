@@ -151,14 +151,7 @@ impl RedisService {
             .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e))
     }
 
-    pub async fn publish<T>(
-        self: Arc<Self>,
-        chan_name: String,
-        obj_str: String,
-    ) -> Result<(), Error>
-    where
-        T: Clone + Serialize,
-    {
+    pub async fn publish(self: Arc<Self>, chan_name: String, obj_str: String) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
