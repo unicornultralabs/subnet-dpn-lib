@@ -20,6 +20,6 @@ pub struct AssignMasternodeRes {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ActivePeersClients {
-    pub active_peers: i64,
-    pub active_clients: i64,
+    pub active_peers: u32,
+    pub active_clients: u32,
 }
