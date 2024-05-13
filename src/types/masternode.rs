@@ -17,3 +17,9 @@ pub struct MasternodeInfo {
 pub struct AssignMasternodeRes {
     pub masternode: Option<MasternodeInfo>,
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ActivePeersClients {
+    pub active_peers: i64,
+    pub active_clients: i64,
+}
