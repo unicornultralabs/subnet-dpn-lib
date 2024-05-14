@@ -33,6 +33,14 @@ pub enum DPNEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OnchainWithdrawalRequest {
+    pub from: String,
+    pub to: String,
+    pub amount: u64,
+    pub tx_hash: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerConnectedExtra {
     pub masternode_id: String,
     pub peer_addr: String,
