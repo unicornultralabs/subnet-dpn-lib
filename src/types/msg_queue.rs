@@ -44,6 +44,7 @@ pub struct OnchainWithdrawalRequest {
 pub struct ProcessedTx {
     pub tx_hash: String,
     pub status: TxStatus,
+    pub chain_tx_hash: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
