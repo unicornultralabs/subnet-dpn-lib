@@ -4,7 +4,7 @@ use super::{
     bandwidth::{EphemeralSession, SessionTerminationReason},
     connection::PeernodeInfo,
     internal_tx::InternalTx,
-    tx::Tx,
+    tx::{Tx,TxStatus},
 };
 
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
@@ -38,6 +38,13 @@ pub struct OnchainWithdrawalRequest {
     pub to: String,
     pub amount: u64,
     pub tx_hash: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProcessedTx {
+    pub tx_hash: String,
+    pub status: TxStatus,
+    pub chain_tx_hash: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
