@@ -10,6 +10,7 @@ pub mod referral;
 pub mod region;
 pub mod reward;
 pub mod sg_meta;
+pub mod stream_payload;
 pub mod tier;
 pub mod tx;
 pub mod user;
