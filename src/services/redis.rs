@@ -1,8 +1,13 @@
 use anyhow::{anyhow, Error, Result};
 use redis::{Commands as _, Connection, RedisResult};
+use redis_async::client::{ConnectionBuilder, PubsubConnection};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
+use url::Url;
+
+pub const UPDATE_USER_BANDWIDTH_PRICE_CHANNEL: &str = "update_user_bandwidth_price";
+pub const PEER_STATUS_CHAN: &str = "peer_status_chan";
 
 #[derive(Debug)]
 pub struct RedisService {
@@ -162,6 +167,85 @@ impl RedisService {
 
     pub async fn get_conn(self: Arc<Self>) -> RedisResult<Connection> {
         self.client.get_connection()
+    }
+}
+
+#[derive(Debug)]
+pub struct RedisPubSubService {
+    pubsub_con: PubsubConnection,
+}
+
+struct RedisUri {
+    is_tls: bool,
+    password: Option<String>,
+    host: String,
+    port: u16,
+}
+
+impl RedisPubSubService {
+    pub async fn new(redis_uri: String) -> Result<Self> {
+        let conn_builder = Self::get_redis_conn_builder_from_uri(&redis_uri)?;
+        let pubsub_con = conn_builder
+            .pubsub_connect()
+            .await
+            .map_err(|e| anyhow!("create pub sub connection failed err={}", e))?;
+        Ok(Self { pubsub_con })
+    }
+
+    pub fn get_pubsub_conn(self) -> PubsubConnection {
+        self.pubsub_con
+    }
+
+    fn parse_redis_uri(redis_uri: &str) -> Result<RedisUri> {
+        let parsed_url = Url::parse(redis_uri)?;
+
+        let is_tls = match parsed_url.scheme() {
+            "redis" => false,
+            "rediss" => true,
+            unknown => {
+                return Err(anyhow::anyhow!(
+                    "invalid scheme, must be 'redis' or 'rediss' unknown {}",
+                    unknown
+                ))
+            }
+        };
+        let password = parsed_url.password().map(|p| p.to_string());
+
+        let host = match parsed_url.host_str() {
+            Some(host) => host.to_string(),
+            None => return Err(anyhow::anyhow!("parse host failed")),
+        };
+
+        let port = match parsed_url.port() {
+            Some(port) => port,
+            None => return Err(anyhow::anyhow!("parse port failed")),
+        };
+
+        Ok(RedisUri {
+            is_tls,
+            password,
+            host,
+            port,
+        })
+    }
+
+    pub fn get_redis_conn_builder_from_uri(redis_uri: &str) -> Result<ConnectionBuilder> {
+        let redis_info =
+            Self::parse_redis_uri(redis_uri).map_err(|e| anyhow!("parse failed err={}", e))?;
+
+        let mut connection_builder: ConnectionBuilder =
+            ConnectionBuilder::new(redis_info.host, redis_info.port)
+                .map_err(|e| anyhow!("connection build create failed err={}", e))?;
+
+        if redis_info.is_tls {
+            connection_builder.tls();
+        }
+
+        if let Some(redis_password) = redis_info.password {
+            connection_builder.password(redis_password);
+        }
+
+        Ok(connection_builder)
     }
 }
 
