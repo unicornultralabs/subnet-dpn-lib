@@ -1,0 +1,8 @@
+syntax = "proto3";
+package subnet_dpn.stream_payload;
+
+message ProtoStreamPayload {
+  string origin_topic = 1;
+  uint64 stream_id = 2;
+  bytes payload = 3;
+}

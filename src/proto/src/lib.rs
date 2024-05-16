@@ -16,5 +16,9 @@ pub mod notification {
     include!(concat!(env!("OUT_DIR"), "/subnet_dpn.noti.rs"));
 }
 
+pub mod stream_payload {
+    include!(concat!(env!("OUT_DIR"), "/subnet_dpn.stream_payload.rs"));
+}
+
 #[cfg(test)]
 mod tests {}
