@@ -189,8 +189,8 @@ impl RedisPubSubService {
         Ok(Self { pubsub_con })
     }
 
-    pub fn get_pubsub_conn(self) -> PubsubConnection {
-        self.pubsub_con
+    pub fn get_pubsub_conn(self: Arc<Self>) -> PubsubConnection {
+        self.pubsub_con.clone()
     }
 
     fn parse_redis_uri(redis_uri: &str) -> Result<RedisUri> {
