@@ -6,9 +6,6 @@ use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
-pub const UPDATE_USER_BANDWIDTH_PRICE_CHANNEL: &str = "update_user_bandwidth_price";
-pub const PEER_STATUS_CHAN: &str = "peer_status_chan";
-
 #[derive(Debug)]
 pub struct RedisService {
     client: redis::Client,
@@ -249,25 +246,36 @@ impl RedisPubSubService {
     }
 }
 
-pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, String) {
-    (
-        "peer_geo".to_owned(),
-        format!("{}_{}", masternode_id.clone(), login_session_id.clone()),
-    )
-}
+pub struct DPNRedisKey {}
+impl DPNRedisKey {
+    pub fn get_geo_kf(masternode_id: String, login_session_id: String) -> (String, String) {
+        (
+            "peer_geo".to_owned(),
+            format!("{}_{}", masternode_id.clone(), login_session_id.clone()),
+        )
+    }
 
-pub fn get_peer_queue_k() -> String {
-    "peer_queue".to_owned()
-}
+    pub fn get_peer_queue_k() -> String {
+        "peer_queue".to_owned()
+    }
 
-pub fn get_price_kf(peer_addr: String) -> (String, String) {
-    ("peer_price".to_owned(), peer_addr)
-}
+    pub fn get_price_kf(peer_addr: String) -> (String, String) {
+        ("peer_price".to_owned(), peer_addr)
+    }
 
-pub fn get_proxy_acc_kf(id: String) -> (String, String) {
-    ("proxy_acc".to_owned(), id)
-}
+    pub fn get_proxy_acc_kf(id: String) -> (String, String) {
+        ("proxy_acc".to_owned(), id)
+    }
 
-pub fn get_proxy_acc_chan() -> String {
-    "proxy_acc_updated".to_string()
+    pub fn get_proxy_acc_chan() -> String {
+        "proxy_acc_updated".to_string()
+    }
+
+    pub fn get_price_chan() -> String {
+        "price_updated".to_string()
+    }
+
+    pub fn get_peer_status_chan(masternode_id: String) -> String {
+        format!("peer_status_updated_{}", masternode_id)
+    }
 }
