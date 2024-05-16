@@ -4,6 +4,9 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 
+
+pub const UPDATE_USER_BANDWIDTH_PRICE_CHANNEL : &str = "update_user_bandwidth_price";
+
 #[derive(Debug)]
 pub struct RedisService {
     client: redis::Client,
