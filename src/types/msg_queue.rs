@@ -36,7 +36,7 @@ pub enum DPNEvent {
 pub struct OnchainWithdrawalRequest {
     pub from: String,
     pub to: String,
-    pub amount: u64,
+    pub amount: i64,
     pub tx_hash: String,
 }
 
