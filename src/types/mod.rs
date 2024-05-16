@@ -13,3 +13,4 @@ pub mod sg_meta;
 pub mod tier;
 pub mod tx;
 pub mod user;
+pub mod user_xp;
