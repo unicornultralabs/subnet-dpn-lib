@@ -1,8 +1,24 @@
 syntax = "proto3";
 package subnet_dpn.stream_payload;
 
-message ProtoStreamPayload {
+message ProtoProxyPayload {
   string origin_topic = 1;
   uint64 stream_id = 2;
   bytes payload = 3;
+}
+
+message ProtoVPNPayload {
+
+}
+
+message ProtoHealthCheck {
+  string msg = 1;
+}
+
+message ProtoStreamPayload {
+  oneof payload {
+    ProtoProxyPayload proxy_payload = 1;
+    ProtoVPNPayload vpn_payload = 2;
+    ProtoHealthCheck health_check = 3;
+  }
 }
