@@ -9,15 +9,18 @@ pub enum PeerStatus {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStatusConnected {
+    pub uuid: String,
     pub ip_u32: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStatusDisconnected {
+    pub uuid: String,
     pub ip_u32: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStatusClientRemoved {
+    pub uuid: String,
     pub ip_u32: u32,
 }
