@@ -30,3 +30,4 @@ log = "0.4.20"
 mockall = { version = "0.11.2", features = ["nightly"] }
 redis-async = { version = "0.17.1", features = ["with-rustls"] }
 url = "2.5.0"
+rumqttc = { version = "0.24.0", features = ["url"] }
