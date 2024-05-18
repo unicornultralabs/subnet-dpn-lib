@@ -16,7 +16,6 @@ pub struct VPNPayload {
 
 #[derive(Debug, Clone)]
 pub struct HealthCheck {
-    pub msg: String
 }
 
 
@@ -93,16 +92,13 @@ impl Into<ProxyPayload> for ProtoProxyPayload {
 
 impl Into<ProtoHealthCheck> for HealthCheck {
     fn into(self) -> ProtoHealthCheck {
-        ProtoHealthCheck {
-            msg: self.msg,
-        }
+        ProtoHealthCheck {}
     }
 }
 
 impl Into<HealthCheck> for ProtoHealthCheck {
     fn into(self) -> HealthCheck {
         HealthCheck {
-            msg: self.msg,
         }
     }
 }
@@ -136,9 +132,7 @@ impl Into<ProtoStreamPayload> for StreamPayload {
                 payload: Some(Payload::VpnPayload(ProtoVpnPayload {})),
             },
             StreamPayload::HealthCheck(h) => ProtoStreamPayload {
-                payload: Some(Payload::HealthCheck(ProtoHealthCheck {
-                    msg: h.msg,
-                })),
+                payload: Some(Payload::HealthCheck(ProtoHealthCheck {})),
             },
         }
     }
@@ -155,9 +149,7 @@ impl Into<StreamPayload> for ProtoStreamPayload {
                 payload: p.payload,
             }),
             Payload::VpnPayload(_) => StreamPayload::VPNPayload(VPNPayload {}),
-            Payload::HealthCheck(h) => StreamPayload::HealthCheck(HealthCheck {
-                msg: h.msg,
-            }),
+            Payload::HealthCheck(h) => StreamPayload::HealthCheck(HealthCheck {}),
         }
     }
 }

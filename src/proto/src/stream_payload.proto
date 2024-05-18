@@ -8,11 +8,9 @@ message ProtoProxyPayload {
 }
 
 message ProtoVPNPayload {
-
 }
 
 message ProtoHealthCheck {
-  string msg = 1;
 }
 
 message ProtoStreamPayload {
