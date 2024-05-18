@@ -1,6 +1,23 @@
-use dpn_proto::stream_payload::ProtoStreamPayload;
+use dpn_proto::stream_payload::{proto_stream_payload::Payload, ProtoHealthCheck, ProtoProxyPayload, ProtoStreamPayload, ProtoVpnPayload};
 use log::info;
 use prost::Message;
+
+
+#[derive(Debug, Clone)]
+pub enum StreamPayload {
+    ProxyPayload(ProxyPayload),
+    VPNPayload(VPNPayload),
+    HealthCheck(HealthCheck)
+}
+
+#[derive(Debug, Clone)]
+pub struct VPNPayload {
+}
+
+#[derive(Debug, Clone)]
+pub struct HealthCheck {
+}
+
 
 #[derive(Debug, Clone)]
 pub struct StreamOrigin {
@@ -13,24 +30,24 @@ pub struct StreamOrigin {
 }
 
 #[derive(Debug, Clone)]
-pub struct StreamPayload {
+pub struct ProxyPayload {
     pub origin: StreamOrigin,
     pub payload: Vec<u8>,
 }
 
-impl StreamPayload {
+impl ProxyPayload {
     pub fn stream_tx_id(&self) -> String {
         format!("{}:{}", self.origin.origin_topic, self.origin.stream_id)
     }
 
     pub fn to_vec(&self) -> Vec<u8> {
-        let proto: ProtoStreamPayload = self.clone().into();
+        let proto: ProtoProxyPayload = self.clone().into();
         let binding = ::prost::Message::encode_to_vec(&proto);
         binding.as_slice().to_owned()
     }
 
     pub fn from_bytes(bz: &[u8]) -> Self {
-        let proto = ProtoStreamPayload::decode(bz).expect("decode proto stream payload failed");
+        let proto = ProtoProxyPayload::decode(bz).expect("decode proto stream payload failed");
         proto.into()
     }
 
@@ -53,9 +70,9 @@ impl StreamPayload {
     }
 }
 
-impl Into<ProtoStreamPayload> for StreamPayload {
-    fn into(self) -> ProtoStreamPayload {
-        ProtoStreamPayload {
+impl Into<ProtoProxyPayload> for ProxyPayload {
+    fn into(self) -> ProtoProxyPayload {
+        ProtoProxyPayload {
             origin_topic: self.origin.origin_topic,
             stream_id: self.origin.stream_id,
             duration: self.origin.duration,
@@ -64,15 +81,79 @@ impl Into<ProtoStreamPayload> for StreamPayload {
     }
 }
 
-impl Into<StreamPayload> for ProtoStreamPayload {
-    fn into(self) -> StreamPayload {
-        StreamPayload {
+impl Into<ProxyPayload> for ProtoProxyPayload {
+    fn into(self) -> ProxyPayload {
+        ProxyPayload {
             origin: StreamOrigin {
                 origin_topic: self.origin_topic,
                 stream_id: self.stream_id,
                 duration: self.duration,
             },
             payload: self.payload,
+        }
+    }
+}
+
+impl Into<ProtoHealthCheck> for HealthCheck {
+    fn into(self) -> ProtoHealthCheck {
+        ProtoHealthCheck {}
+    }
+}
+
+impl Into<HealthCheck> for ProtoHealthCheck {
+    fn into(self) -> HealthCheck {
+        HealthCheck {
+        }
+    }
+}
+
+impl Into<ProtoVpnPayload> for VPNPayload {
+    fn into(self) -> ProtoVpnPayload {
+        ProtoVpnPayload {
+        }
+    }
+}
+
+impl Into<VPNPayload> for ProtoVpnPayload {
+    fn into(self) -> VPNPayload {
+        VPNPayload {
+        }
+    }
+}
+
+impl Into<ProtoStreamPayload> for StreamPayload {
+    fn into(self) -> ProtoStreamPayload {
+        match self {
+            StreamPayload::ProxyPayload(p) => ProtoStreamPayload {
+                payload: Some(Payload::ProxyPayload(ProtoProxyPayload {
+                    origin_topic: p.origin.origin_topic,
+                    stream_id: p.origin.stream_id,
+                    payload: p.payload,
+                }
+            )),
+            },
+            StreamPayload::VPNPayload(_) => ProtoStreamPayload {
+                payload: Some(Payload::VpnPayload(ProtoVpnPayload {})),
+            },
+            StreamPayload::HealthCheck(h) => ProtoStreamPayload {
+                payload: Some(Payload::HealthCheck(ProtoHealthCheck {})),
+            },
+        }
+    }
+}
+
+impl Into<StreamPayload> for ProtoStreamPayload {
+    fn into(self) -> StreamPayload {
+        match self.payload.unwrap() {
+            Payload::ProxyPayload(p) => StreamPayload::ProxyPayload(ProxyPayload {
+                origin: StreamOrigin {
+                    origin_topic: p.origin_topic,
+                    stream_id: p.stream_id,
+                },
+                payload: p.payload,
+            }),
+            Payload::VpnPayload(_) => StreamPayload::VPNPayload(VPNPayload {}),
+            Payload::HealthCheck(h) => StreamPayload::HealthCheck(HealthCheck {}),
         }
     }
 }
@@ -100,7 +181,7 @@ mod tests {
             101, 99, 107, 111, 41, 32, 67, 104, 114, 111, 109, 101, 47, 49, 50, 52, 46, 48, 46, 48,
             46, 48, 32, 83, 97, 102, 97, 114, 105, 47, 53, 51, 55, 46, 51, 54, 13, 10, 13, 10,
         ];
-        let payload = StreamPayload::from_bytes(bz);
+        let payload = ProxyPayload::from_bytes(bz);
         let bz = payload.to_vec();
     }
 }
