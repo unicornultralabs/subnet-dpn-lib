@@ -1,23 +1,22 @@
-use dpn_proto::stream_payload::{proto_stream_payload::Payload, ProtoHealthCheck, ProtoProxyPayload, ProtoStreamPayload, ProtoVpnPayload};
+use dpn_proto::stream_payload::{
+    proto_stream_payload::Payload, ProtoHealthCheck, ProtoProxyPayload, ProtoStreamPayload,
+    ProtoVpnPayload,
+};
 use log::info;
 use prost::Message;
-
 
 #[derive(Debug, Clone)]
 pub enum StreamPayload {
     ProxyPayload(ProxyPayload),
     VPNPayload(VPNPayload),
-    HealthCheck(HealthCheck)
+    HealthCheck(HealthCheck),
 }
 
 #[derive(Debug, Clone)]
-pub struct VPNPayload {
-}
+pub struct VPNPayload {}
 
 #[derive(Debug, Clone)]
-pub struct HealthCheck {
-}
-
+pub struct HealthCheck {}
 
 #[derive(Debug, Clone)]
 pub struct StreamOrigin {
@@ -102,22 +101,19 @@ impl Into<ProtoHealthCheck> for HealthCheck {
 
 impl Into<HealthCheck> for ProtoHealthCheck {
     fn into(self) -> HealthCheck {
-        HealthCheck {
-        }
+        HealthCheck {}
     }
 }
 
 impl Into<ProtoVpnPayload> for VPNPayload {
     fn into(self) -> ProtoVpnPayload {
-        ProtoVpnPayload {
-        }
+        ProtoVpnPayload {}
     }
 }
 
 impl Into<VPNPayload> for ProtoVpnPayload {
     fn into(self) -> VPNPayload {
-        VPNPayload {
-        }
+        VPNPayload {}
     }
 }
 
@@ -128,14 +124,14 @@ impl Into<ProtoStreamPayload> for StreamPayload {
                 payload: Some(Payload::ProxyPayload(ProtoProxyPayload {
                     origin_topic: p.origin.origin_topic,
                     stream_id: p.origin.stream_id,
+                    duration: p.origin.duration,
                     payload: p.payload,
-                }
-            )),
+                })),
             },
             StreamPayload::VPNPayload(_) => ProtoStreamPayload {
                 payload: Some(Payload::VpnPayload(ProtoVpnPayload {})),
             },
-            StreamPayload::HealthCheck(h) => ProtoStreamPayload {
+            StreamPayload::HealthCheck(_) => ProtoStreamPayload {
                 payload: Some(Payload::HealthCheck(ProtoHealthCheck {})),
             },
         }
@@ -149,11 +145,12 @@ impl Into<StreamPayload> for ProtoStreamPayload {
                 origin: StreamOrigin {
                     origin_topic: p.origin_topic,
                     stream_id: p.stream_id,
+                    duration: p.duration,
                 },
                 payload: p.payload,
             }),
             Payload::VpnPayload(_) => StreamPayload::VPNPayload(VPNPayload {}),
-            Payload::HealthCheck(h) => StreamPayload::HealthCheck(HealthCheck {}),
+            Payload::HealthCheck(_) => StreamPayload::HealthCheck(HealthCheck {}),
         }
     }
 }
