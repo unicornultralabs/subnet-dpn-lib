@@ -8,6 +8,8 @@ pub struct StreamOrigin {
     /// for multiplex purpose, destination may process data sent by origin
     /// returned outcome is sent back along stream_id
     pub stream_id: u64,
+    // max duration that the stream will last
+    pub duration: u64,
 }
 
 #[derive(Debug, Clone)]
@@ -56,6 +58,7 @@ impl Into<ProtoStreamPayload> for StreamPayload {
         ProtoStreamPayload {
             origin_topic: self.origin.origin_topic,
             stream_id: self.origin.stream_id,
+            duration: self.origin.duration,
             payload: self.payload,
         }
     }
@@ -67,6 +70,7 @@ impl Into<StreamPayload> for ProtoStreamPayload {
             origin: StreamOrigin {
                 origin_topic: self.origin_topic,
                 stream_id: self.stream_id,
+                duration: self.duration,
             },
             payload: self.payload,
         }
