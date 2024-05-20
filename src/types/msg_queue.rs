@@ -7,6 +7,22 @@ use super::{
     tx::{Tx,TxStatus},
 };
 
+pub const EVENTS_EXCHANGE: &str = "dpn-events";
+pub const STATS_EXCHANGE: &str = "dpn-stats";
+pub const TXS_EXCHANGE: &str = "dpn-txs";
+pub const WITHDRAWALS_EXCHANGE: &str = "dpn-withdrawals";
+
+pub const CONNECTION_EVENTS_ADMIN_QUEUE: &str = "connection-events_admin";
+pub const CONNECTION_EVENTS_EXPLORER_QUEUE: &str = "connection-events_explorer";
+pub const EVENTS_ACCOUNTNG_QUEUE: &str = "events_accounting";
+pub const SESSION_EVENTS_ADMIN_QUEUE: &str = "session-events_admin";
+pub const SESSION_EVENTS_EXPLORER_QUEUE: &str = "session-events_explorer";
+pub const SESSION_EVENTS_WEBSOCKET_QUEUE: &str = "session-events_websocket";
+pub const STATS_WEBSOCKET_QUEUE: &str = "stats_websocket";
+pub const TXS_ADMIN_QUEUE: &str = "txs_admin";
+pub const TXS_EXPLORER_QUEUE: &str = "txs_explorer";
+pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
+
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
 pub const CONNECTION_ROUTING_KEY: &str = "connection";
