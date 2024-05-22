@@ -75,6 +75,16 @@ impl RedisService {
         Ok(rs)
     }
 
+    pub fn hdel(self: Arc<Self>, key: String, field: String) -> Result<(), Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        conn.hdel(key.clone(), field.clone())
+            .map_err(|e| anyhow!("redis cannot hdel key={} field={} err={}", key, field, e))?;
+        Ok(())
+    }
+
     pub fn zadd(self: Arc<Self>, key: String, score: u32, value: u32) -> Result<(), Error> {
         let mut conn = self
             .client
@@ -257,6 +267,10 @@ impl DPNRedisKey {
 
     pub fn get_peer_queue_k() -> String {
         "peer_queue".to_owned()
+    }
+
+    pub fn get_peers_kf(ip_u32: u32) -> (String, String) {
+        ("peers".to_owned(), format!("{}", ip_u32))
     }
 
     pub fn get_price_kf(peer_addr: String) -> (String, String) {
