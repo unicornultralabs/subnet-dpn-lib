@@ -5,6 +5,7 @@ use maxminddb::{geoip2, Reader};
 
 use crate::types::geo::{City, Continent, Country, Geo, Location};
 
+#[derive(Debug)]
 pub struct GeoService {
     reader: Reader<Vec<u8>>,
 }

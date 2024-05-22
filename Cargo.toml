@@ -36,4 +36,4 @@ tokio = { version = "1.37.0", features = ["time"] }
 actix-web = "4.3.1"
 reqwest = { version = "0.11.18", features = ["json", "native-tls-crate"] }
 utoipa-swagger-ui = { version = "5.0.0", features = ["actix-web"] }
-maxminddb = "0.17"
+maxminddb = "0.24.0"
