@@ -94,13 +94,13 @@ impl Default for Location {
     }
 }
 
-pub fn get_geo_from_ip_address(ip_addr: String) -> Result<Geo> {
+pub fn get_geo_from_ip_address(mmdb_path: String, ip_addr: String) -> Result<Geo> {
     let ip_addr: IpAddr = ip_addr
         .clone()
         .parse()
         .map_err(|e| anyhow!("parse ip addr failed err={}", e))?;
 
-    let reader = maxminddb::Reader::open_readfile("./GeoLite2-City.mmdb".to_string())
+    let reader = maxminddb::Reader::open_readfile(mmdb_path)
         .map_err(|e| anyhow!("failed to read mmdb file err={}", e))?;
 
     let geo = reader.lookup::<geoip2::City>(ip_addr).map_err(|e| {
