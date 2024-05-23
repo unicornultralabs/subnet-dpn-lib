@@ -6,7 +6,7 @@ use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
-use crate::types::connection::ProxyAccData;
+use crate::types::{bandwidth::UserBandwidthPrice, connection::ProxyAccData};
 
 use super::types::{PeerChanged, PeerChangedInfo, ProxyAccChanged};
 
@@ -335,6 +335,43 @@ impl RedisService {
             .clone()
             .hgetall::<PeerChangedInfo>(k)
             .map_err(|e| anyhow!("redis get peers failed err={}", e))?;
+        Ok(peers
+            .iter()
+            .map(|(_, peer_info)| peer_info.clone())
+            .collect())
+    }
+
+    pub async fn publish_peer_price(
+        self: Arc<Self>,
+        price: UserBandwidthPrice,
+    ) -> anyhow::Result<()> {
+        let (k, f) = DPNRedisKey::get_price_kf(price.user_addr.clone());
+        self.clone()
+            .hset(k, f, price.clone())
+            .map_err(|e| anyhow!("redis set peer price failed err={}", e))?;
+
+        self.clone()
+            .publish(
+                DPNRedisKey::get_price_chan(),
+                serde_json::to_string(&price).unwrap(),
+            )
+            .await
+            .map_err(|e| {
+                anyhow!(
+                    "redis peer status publish failed price={:?} err={}",
+                    price,
+                    e
+                )
+            })?;
+        Ok(())
+    }
+
+    pub async fn get_peers_price(self: Arc<Self>) -> Result<Vec<UserBandwidthPrice>> {
+        let (k, _) = DPNRedisKey::get_price_kf("".to_string());
+        let peers = self
+            .clone()
+            .hgetall::<UserBandwidthPrice>(k)
+            .map_err(|e| anyhow!("redis get peers price failed err={}", e))?;
         Ok(peers
             .iter()
             .map(|(_, peer_info)| peer_info.clone())
