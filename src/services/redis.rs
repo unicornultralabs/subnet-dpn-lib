@@ -427,65 +427,20 @@ impl RedisService {
     ) -> anyhow::Result<()> {
         match proxy_acc_changed.clone() {
             ProxyAccChanged::Created(pad) => {
-                // both use proxy acc id and whitelist ip as field
                 let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
                 self.clone()
                     .hset(k, f, pad.clone())
                     .map_err(|e| anyhow!("{}", e))?;
-                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
-                    let (k, f) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip.clone());
-                    self.clone()
-                        .hset(k, f, pad.clone())
-                        .map_err(|e| anyhow!("{}", e))?;
-                }
             }
             ProxyAccChanged::Updated(pad) => {
-                // find the last proxy acc
-                let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
-                let pad = self
-                    .clone()
-                    .hget::<ProxyAccData>(k.clone(), f.clone())
-                    .map_err(|e| anyhow!("{}", e))?;
-
-                // delete last proxy acc with id
-                self.clone().hdel(k, f).map_err(|e| anyhow!("{}", e))?;
-                // delete last proxy acc with ip
-                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
-                    let (k_ip, f_ip) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip.clone());
-                    self.clone()
-                        .hdel(k_ip, f_ip)
-                        .map_err(|e| anyhow!("{}", e))?;
-                }
-
-                // both use proxy acc id and whitelist ip as field
                 let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
                 self.clone()
                     .hset(k, f, pad.clone())
                     .map_err(|e| anyhow!("{}", e))?;
-                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
-                    let (k, f) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip);
-                    self.clone()
-                        .hset(k, f, pad.clone())
-                        .map_err(|e| anyhow!("{}", e))?;
-                }
             }
             ProxyAccChanged::Deleted(id) => {
-                // find the last proxy acc
                 let (k, f) = DPNRedisKey::get_proxy_acc_kf(id.clone());
-                let pad = self
-                    .clone()
-                    .hget::<ProxyAccData>(k.clone(), f.clone())
-                    .map_err(|e| anyhow!("{}", e))?;
-
-                // delete last proxy acc with id
                 self.clone().hdel(k, f).map_err(|e| anyhow!("{}", e))?;
-                // delete last proxy acc with ip
-                if let Some(whitelisted_ip) = pad.whitelisted_ip {
-                    let (k_ip, f_ip) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip);
-                    self.clone()
-                        .hdel(k_ip, f_ip)
-                        .map_err(|e| anyhow!("{}", e))?;
-                }
             }
         }
 
