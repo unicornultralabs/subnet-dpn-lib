@@ -6,7 +6,7 @@ use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
-use super::types::PeerStatus;
+use super::types::{PeerStatus, PeerStatusDisconnected};
 
 struct RedisUri {
     is_tls: bool,
@@ -247,6 +247,48 @@ impl RedisService {
 
     pub async fn get_conn(self: Arc<Self>) -> RedisResult<Connection> {
         self.client.get_connection()
+    }
+
+    pub async fn remove_all_peers_status(
+        self: Arc<Self>,
+        masternode_id: String,
+    ) -> anyhow::Result<()> {
+        let (k, _) = DPNRedisKey::get_peers_kf(0);
+        let peers = self
+            .clone()
+            .hgetall::<PeerStatus>(k.clone())
+            .map_err(|e| anyhow!("redis get peers failed err={}", e))?;
+
+        for (_, peer_status) in peers {
+            // publish peer status to redis
+            let status = match peer_status {
+                PeerStatus::Connected(s) => PeerStatus::Disconnected(PeerStatusDisconnected {
+                    uuid: s.uuid.clone(),
+                    login_session_id: s.login_session_id.clone(),
+                    ip_u32: s.ip_u32,
+                }),
+                _ => continue,
+            };
+
+            if let Err(e) = self
+                .clone()
+                .publish(
+                    DPNRedisKey::get_peer_status_chan(masternode_id.clone()),
+                    serde_json::to_string(&status).unwrap(),
+                )
+                .await
+            {
+                return Err(anyhow!(
+                    "redis peer status publish failed status={:?} err={}",
+                    status,
+                    e
+                ));
+            }
+        }
+
+        self.clone()
+            .del(k)
+            .map_err(|e| anyhow!("failed to remove peers from redis err={}", e))
     }
 
     pub async fn publish_peer_status(
