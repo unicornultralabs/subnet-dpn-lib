@@ -6,7 +6,9 @@ use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
-use super::types::{PeerStatus, PeerStatusDisconnected};
+use crate::types::connection::ProxyAccData;
+
+use super::types::{PeerChanged, PeerChangedInfo, ProxyAccChanged};
 
 struct RedisUri {
     is_tls: bool,
@@ -249,38 +251,34 @@ impl RedisService {
         self.client.get_connection()
     }
 
-    pub async fn remove_all_peers_status(
-        self: Arc<Self>,
-        masternode_id: String,
-    ) -> anyhow::Result<()> {
+    /// remove all peers in redis cache
+    /// it must be called when shutting down masternode
+    pub async fn remove_all_peers(self: Arc<Self>, masternode_id: String) -> anyhow::Result<()> {
         let (k, _) = DPNRedisKey::get_peers_kf(masternode_id.clone(), 0);
         let peers = self
             .clone()
-            .hgetall::<PeerStatus>(k.clone())
+            .hgetall::<PeerChangedInfo>(k.clone())
             .map_err(|e| anyhow!("redis get peers failed err={}", e))?;
 
-        for (_, peer_status) in peers {
-            // publish peer status to redis
-            let status = match peer_status {
-                PeerStatus::Connected(s) => PeerStatus::Disconnected(PeerStatusDisconnected {
-                    uuid: s.uuid.clone(),
-                    login_session_id: s.login_session_id.clone(),
-                    ip_u32: s.ip_u32,
-                }),
-                _ => continue,
-            };
+        for (_, change) in peers {
+            // publish peer to redis
+            let change = PeerChanged::Disconnected(PeerChangedInfo {
+                uuid: change.uuid.clone(),
+                login_session_id: change.login_session_id.clone(),
+                ip_u32: change.ip_u32,
+            });
 
             if let Err(e) = self
                 .clone()
                 .publish(
                     DPNRedisKey::get_peers_chan(masternode_id.clone()),
-                    serde_json::to_string(&status).unwrap(),
+                    serde_json::to_string(&change).unwrap(),
                 )
                 .await
             {
                 return Err(anyhow!(
                     "redis peer status publish failed status={:?} err={}",
-                    status,
+                    change,
                     e
                 ));
             }
@@ -291,30 +289,28 @@ impl RedisService {
             .map_err(|e| anyhow!("failed to remove peers from redis err={}", e))
     }
 
-    pub async fn publish_peer_status(
+    pub async fn publish_peer(
         self: Arc<Self>,
         masternode_id: String,
-        status: PeerStatus,
+        status: PeerChanged,
     ) -> anyhow::Result<()> {
         match status.clone() {
-            PeerStatus::Connected(s) => {
+            PeerChanged::Connected(info) => {
                 // add peer to redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), s.ip_u32);
-                if let Err(e) = self.clone().hset(k, f, status.clone()) {
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.ip_u32);
+                if let Err(e) = self.clone().hset(k, f, info.clone()) {
                     return Err(anyhow!("redis peer add failed err={}", e));
                 }
             }
-            PeerStatus::Disconnected(s) => {
+            PeerChanged::Disconnected(info) => {
                 // remove peer from redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), s.ip_u32);
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.ip_u32);
                 if let Err(e) = self.clone().hdel(k, f) {
                     return Err(anyhow!("redis peer removal failed err={}", e));
                 }
             }
-            PeerStatus::ClientRemoved(_) => {}
-        }
+        };
 
-        // publish peer status to redis
         if let Err(e) = self
             .clone()
             .publish(
@@ -333,16 +329,145 @@ impl RedisService {
         Ok(())
     }
 
-    pub async fn get_peers_status(
-        self: Arc<Self>,
-        masternode_id: String,
-    ) -> Result<Vec<PeerStatus>> {
+    pub async fn get_peers(self: Arc<Self>, masternode_id: String) -> Result<Vec<PeerChangedInfo>> {
         let (k, _) = DPNRedisKey::get_peers_kf(masternode_id, 0);
         let peers = self
             .clone()
-            .hgetall::<PeerStatus>(k)
+            .hgetall::<PeerChangedInfo>(k)
             .map_err(|e| anyhow!("redis get peers failed err={}", e))?;
-        Ok(peers.iter().map(|(_, status)| status.clone()).collect())
+        Ok(peers
+            .iter()
+            .map(|(_, peer_info)| peer_info.clone())
+            .collect())
+    }
+
+    pub async fn get_proxy_accs(self: Arc<Self>) -> Result<Vec<ProxyAccData>> {
+        let (k, _) = DPNRedisKey::get_proxy_acc_kf("".to_string());
+        let proxy_accs = self
+            .clone()
+            .hgetall::<ProxyAccData>(k)
+            .map_err(|e| anyhow!("redis get proxy accs failed err={}", e))?;
+        Ok(proxy_accs.iter().map(|(_, pad)| pad.clone()).collect())
+    }
+
+    /// remove all proxy accs in redis cache
+    /// it must be called when admin started
+    /// after removal, proxy accs are loaded from db and added to redis
+    pub async fn remove_all_proxy_accs(self: Arc<Self>) -> anyhow::Result<()> {
+        let (k, _) = DPNRedisKey::get_proxy_acc_kf("".to_owned());
+        let proxy_accs = self
+            .clone()
+            .hgetall::<ProxyAccData>(k.clone())
+            .map_err(|e| anyhow!("redis remove proxy accs failed err={}", e))?;
+
+        for (_, proxy_acc) in proxy_accs {
+            // publish proxy acc change to redis
+            let change = ProxyAccChanged::Deleted(proxy_acc.id.clone());
+            if let Err(e) = self
+                .clone()
+                .publish(
+                    DPNRedisKey::get_proxy_acc_chan(),
+                    serde_json::to_string(&change).unwrap(),
+                )
+                .await
+            {
+                return Err(anyhow!(
+                    "redis proxy acc changed publish failed change={:?} err={}",
+                    change,
+                    e
+                ));
+            }
+        }
+
+        self.clone()
+            .del(k)
+            .map_err(|e| anyhow!("failed to remove peers from redis err={}", e))
+    }
+
+    pub async fn publish_proxy_acc(
+        self: Arc<Self>,
+        proxy_acc_changed: ProxyAccChanged,
+    ) -> anyhow::Result<()> {
+        match proxy_acc_changed.clone() {
+            ProxyAccChanged::Created(pad) => {
+                // both use proxy acc id and whitelist ip as field
+                let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
+                self.clone()
+                    .hset(k, f, pad.clone())
+                    .map_err(|e| anyhow!("{}", e))?;
+                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
+                    let (k, f) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip.clone());
+                    self.clone()
+                        .hset(k, f, pad.clone())
+                        .map_err(|e| anyhow!("{}", e))?;
+                }
+            }
+            ProxyAccChanged::Updated(pad) => {
+                // find the last proxy acc
+                let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
+                let pad = self
+                    .clone()
+                    .hget::<ProxyAccData>(k.clone(), f.clone())
+                    .map_err(|e| anyhow!("{}", e))?;
+
+                // delete last proxy acc with id
+                self.clone().hdel(k, f).map_err(|e| anyhow!("{}", e))?;
+                // delete last proxy acc with ip
+                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
+                    let (k_ip, f_ip) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip.clone());
+                    self.clone()
+                        .hdel(k_ip, f_ip)
+                        .map_err(|e| anyhow!("{}", e))?;
+                }
+
+                // both use proxy acc id and whitelist ip as field
+                let (k, f) = DPNRedisKey::get_proxy_acc_kf(pad.id.clone());
+                self.clone()
+                    .hset(k, f, pad.clone())
+                    .map_err(|e| anyhow!("{}", e))?;
+                if let Some(whitelisted_ip) = pad.whitelisted_ip.clone() {
+                    let (k, f) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip);
+                    self.clone()
+                        .hset(k, f, pad.clone())
+                        .map_err(|e| anyhow!("{}", e))?;
+                }
+            }
+            ProxyAccChanged::Deleted(id) => {
+                // find the last proxy acc
+                let (k, f) = DPNRedisKey::get_proxy_acc_kf(id.clone());
+                let pad = self
+                    .clone()
+                    .hget::<ProxyAccData>(k.clone(), f.clone())
+                    .map_err(|e| anyhow!("{}", e))?;
+
+                // delete last proxy acc with id
+                self.clone().hdel(k, f).map_err(|e| anyhow!("{}", e))?;
+                // delete last proxy acc with ip
+                if let Some(whitelisted_ip) = pad.whitelisted_ip {
+                    let (k_ip, f_ip) = DPNRedisKey::get_proxy_acc_kf(whitelisted_ip);
+                    self.clone()
+                        .hdel(k_ip, f_ip)
+                        .map_err(|e| anyhow!("{}", e))?;
+                }
+            }
+        }
+
+        if let Err(e) = self
+            .clone()
+            .publish(
+                DPNRedisKey::get_proxy_acc_chan(),
+                serde_json::to_string(&proxy_acc_changed).unwrap(),
+            )
+            .await
+        {
+            return Err(anyhow!(
+                "redis proxy acc publish failed change={:?} err={}",
+                proxy_acc_changed,
+                e
+            ));
+        }
+
+        Ok(())
     }
 }
 
