@@ -253,7 +253,7 @@ impl RedisService {
         self: Arc<Self>,
         masternode_id: String,
     ) -> anyhow::Result<()> {
-        let (k, _) = DPNRedisKey::get_peers_kf(0);
+        let (k, _) = DPNRedisKey::get_peers_kf(masternode_id.clone(), 0);
         let peers = self
             .clone()
             .hgetall::<PeerStatus>(k.clone())
@@ -273,7 +273,7 @@ impl RedisService {
             if let Err(e) = self
                 .clone()
                 .publish(
-                    DPNRedisKey::get_peer_status_chan(masternode_id.clone()),
+                    DPNRedisKey::get_peers_chan(masternode_id.clone()),
                     serde_json::to_string(&status).unwrap(),
                 )
                 .await
@@ -299,14 +299,14 @@ impl RedisService {
         match status.clone() {
             PeerStatus::Connected(s) => {
                 // add peer to redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(s.ip_u32);
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), s.ip_u32);
                 if let Err(e) = self.clone().hset(k, f, status.clone()) {
                     return Err(anyhow!("redis peer add failed err={}", e));
                 }
             }
             PeerStatus::Disconnected(s) => {
                 // remove peer from redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(s.ip_u32);
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), s.ip_u32);
                 if let Err(e) = self.clone().hdel(k, f) {
                     return Err(anyhow!("redis peer removal failed err={}", e));
                 }
@@ -318,7 +318,7 @@ impl RedisService {
         if let Err(e) = self
             .clone()
             .publish(
-                DPNRedisKey::get_peer_status_chan(masternode_id.clone()),
+                DPNRedisKey::get_peers_chan(masternode_id.clone()),
                 serde_json::to_string(&status).unwrap(),
             )
             .await
@@ -333,8 +333,11 @@ impl RedisService {
         Ok(())
     }
 
-    pub async fn get_peers_status(self: Arc<Self>) -> Result<Vec<PeerStatus>> {
-        let (k, _) = DPNRedisKey::get_peers_kf(0);
+    pub async fn get_peers_status(
+        self: Arc<Self>,
+        masternode_id: String,
+    ) -> Result<Vec<PeerStatus>> {
+        let (k, _) = DPNRedisKey::get_peers_kf(masternode_id, 0);
         let peers = self
             .clone()
             .hgetall::<PeerStatus>(k)
@@ -352,12 +355,16 @@ impl DPNRedisKey {
         )
     }
 
-    pub fn get_peer_queue_k() -> String {
-        "peer_queue".to_owned()
+    pub fn get_peer_queue_k(masternode_id: String) -> String {
+        format!("peer_queue_ms#{}_", masternode_id)
     }
 
-    pub fn get_peers_kf(ip_u32: u32) -> (String, String) {
-        ("peers".to_owned(), format!("{}", ip_u32))
+    pub fn get_peers_kf(masternode_id: String, ip_u32: u32) -> (String, String) {
+        (format!("peers_ms#{}", masternode_id), format!("{}", ip_u32))
+    }
+
+    pub fn get_peers_chan(masternode_id: String) -> String {
+        format!("peers_updated_ms#{}", masternode_id)
     }
 
     pub fn get_price_kf(peer_addr: String) -> (String, String) {
@@ -374,9 +381,5 @@ impl DPNRedisKey {
 
     pub fn get_price_chan() -> String {
         "price_updated".to_string()
-    }
-
-    pub fn get_peer_status_chan(masternode_id: String) -> String {
-        format!("peer_status_updated_{}", masternode_id)
     }
 }
