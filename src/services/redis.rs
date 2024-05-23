@@ -6,6 +6,8 @@ use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
+use super::types::PeerStatus;
+
 struct RedisUri {
     is_tls: bool,
     password: Option<String>,
@@ -245,6 +247,57 @@ impl RedisService {
 
     pub async fn get_conn(self: Arc<Self>) -> RedisResult<Connection> {
         self.client.get_connection()
+    }
+
+    pub async fn publish_peer_status(
+        self: Arc<Self>,
+        masternode_id: String,
+        status: PeerStatus,
+    ) -> anyhow::Result<()> {
+        match status.clone() {
+            PeerStatus::Connected(s) => {
+                // add peer to redis hash
+                let (k, f) = DPNRedisKey::get_peers_kf(s.ip_u32);
+                if let Err(e) = self.clone().hset(k, f, status.clone()) {
+                    return Err(anyhow!("redis peer add failed err={}", e));
+                }
+            }
+            PeerStatus::Disconnected(s) => {
+                // remove peer from redis hash
+                let (k, f) = DPNRedisKey::get_peers_kf(s.ip_u32);
+                if let Err(e) = self.clone().hdel(k, f) {
+                    return Err(anyhow!("redis peer removal failed err={}", e));
+                }
+            }
+            PeerStatus::ClientRemoved(_) => {}
+        }
+
+        // publish peer status to redis
+        if let Err(e) = self
+            .clone()
+            .publish(
+                DPNRedisKey::get_peer_status_chan(masternode_id.clone()),
+                serde_json::to_string(&status).unwrap(),
+            )
+            .await
+        {
+            return Err(anyhow!(
+                "redis peer status publish failed status={:?} err={}",
+                status,
+                e
+            ));
+        }
+
+        Ok(())
+    }
+
+    pub async fn get_peers_status(self: Arc<Self>) -> Result<Vec<PeerStatus>> {
+        let (k, _) = DPNRedisKey::get_peers_kf(0);
+        let peers = self
+            .clone()
+            .hgetall::<PeerStatus>(k)
+            .map_err(|e| anyhow!("redis get peers failed err={}", e))?;
+        Ok(peers.iter().map(|(_, status)| status.clone()).collect())
     }
 }
 
