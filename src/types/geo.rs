@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 pub const DEFAULT_CONTINENTAL_CODE: &str = "DEFAULT";
 
@@ -10,7 +11,7 @@ pub struct Geo {
     pub location: Option<Location>,
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Continent {
     pub code: Option<String>,
     pub geoname_id: Option<u32>,
