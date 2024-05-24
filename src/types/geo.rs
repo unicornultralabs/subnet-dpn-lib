@@ -18,7 +18,7 @@ pub struct Continent {
     pub name: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug, ToSchema)]
 pub struct Country {
     pub geoname_id: Option<u32>,
     pub is_in_european_union: Option<bool>,
@@ -26,7 +26,7 @@ pub struct Country {
     pub name: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug, ToSchema)]
 pub struct City {
     pub geoname_id: Option<u32>,
     pub name: Option<String>,

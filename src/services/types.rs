@@ -1,29 +1,23 @@
 use serde::{Deserialize, Serialize};
 
+use crate::types::connection::ProxyAccData;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum PeerStatus {
-    Connected(PeerStatusConnected),
-    Disconnected(PeerStatusDisconnected),
-    ClientRemoved(PeerStatusClientRemoved),
+pub enum PeerChanged {
+    Connected(PeerChangedInfo),
+    Disconnected(PeerChangedInfo),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PeerStatusConnected {
+pub struct PeerChangedInfo {
     pub uuid: String,
     pub login_session_id: String,
     pub ip_u32: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PeerStatusDisconnected {
-    pub uuid: String,
-    pub login_session_id: String,
-    pub ip_u32: u32,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PeerStatusClientRemoved {
-    pub uuid: String,
-    pub login_session_id: String,
-    pub ip_u32: u32,
+pub enum ProxyAccChanged {
+    Created(ProxyAccData),
+    Updated(ProxyAccData),
+    Deleted(String), // proxy_acc_id
 }
