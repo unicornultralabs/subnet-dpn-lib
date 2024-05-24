@@ -179,6 +179,6 @@ mod tests {
             46, 48, 32, 83, 97, 102, 97, 114, 105, 47, 53, 51, 55, 46, 51, 54, 13, 10, 13, 10,
         ];
         let payload = ProxyPayload::from_bytes(bz);
-        let bz = payload.to_vec();
+        let _ = payload.to_vec();
     }
 }
