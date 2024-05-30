@@ -227,6 +227,31 @@ impl RedisService {
         Ok(result)
     }
 
+    pub fn set(self: Arc<Self>, key: String, value: u32) -> Result<(), Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        match conn.set::<String, u32, ()>(key.clone(), value.clone()) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(anyhow!(
+                "redis failed to set key={} with value={} err={}",key, value,
+                e
+            )),
+        }
+    }
+
+    pub fn get(self: Arc<Self>, key: String) -> Result<u32, Error> {
+        let mut conn = self
+            .client
+            .get_connection()
+            .map_err(|e| anyhow!("cannot get connection err={}", e))?;
+        let value: u32 = conn
+            .get(key.clone())
+            .map_err(|e| anyhow!("redis failed to get key={} err={}", key, e))?;
+        Ok(value)
+    }
+
     /// this function is used to delete data of given key
     pub fn del(self: Arc<Self>, key: String) -> Result<(), Error> {
         let mut conn = self
