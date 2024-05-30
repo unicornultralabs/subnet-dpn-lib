@@ -43,8 +43,10 @@ pub struct UserSignInReq {
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
 pub struct UserSignUpReq {
+    pub email: String,
     pub username: String,
     pub password: String,
+    pub confirm_password: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, ToSchema)]

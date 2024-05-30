@@ -4,7 +4,9 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct User {
+    pub email: Option<String>,
     pub username: Option<String>,
+    pub email_verified: bool,
     pub fingerprint: Option<String>,
     pub pincode: Option<String>,
     pub deposit_addr: Address,
@@ -19,6 +21,8 @@ pub struct User {
 impl User {
     pub fn new(
         email: Option<String>,
+        username: Option<String>,
+        email_verified: bool,
         fingerprint: Option<String>,
         pincode: Option<String>,
         deposit_addr: Address,
@@ -29,7 +33,9 @@ impl User {
         last_login: i64,
     ) -> Self {
         Self {
-            username: email,
+            email,
+            username,
+            email_verified,
             fingerprint: fingerprint,
             pincode: pincode,
             deposit_addr: deposit_addr,
