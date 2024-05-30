@@ -55,6 +55,13 @@ pub struct UserSignUpResp {
 }
 
 #[derive(Deserialize, Serialize, Debug, ToSchema)]
+pub struct ResetPasswordReq {
+    pub email: String,
+    pub password: String,
+    pub confirm_password: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, ToSchema)]
 pub struct SSORes {
     pub code: i16,
     pub user_id: Option<String>,
