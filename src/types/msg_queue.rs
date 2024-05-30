@@ -64,6 +64,12 @@ pub struct ProcessedTx {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClientBalanceUpdate {
+    pub user_addr: String,
+    pub balance: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerConnectedExtra {
     pub masternode_id: String,
     pub peer_addr: String,
