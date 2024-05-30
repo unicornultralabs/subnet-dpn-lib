@@ -3,7 +3,7 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserClaims {
-    pub user_deposit_addr: String,
+    pub user_addr: String,
     pub login_session_id: String,
     pub exp: u64,
 }
