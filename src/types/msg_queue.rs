@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use web3::types::U256;
 
 use super::{
     bandwidth::{EphemeralSession, SessionTerminationReason},
@@ -61,6 +62,12 @@ pub struct ProcessedTx {
     pub tx_hash: String,
     pub status: TxStatus,
     pub chain_tx_hash: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClientPriceUpdate {
+    pub user_addr: String,
+    pub balance: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
