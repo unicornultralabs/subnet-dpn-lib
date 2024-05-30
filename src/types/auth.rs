@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
+use web3::types::Address;
 
 use super::user::User;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserClaims {
-    pub user: User,
+    pub user_deposit_addr: Address,
     pub exp: u64,
     pub login_session_id: String,
 }
