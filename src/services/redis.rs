@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Error, Result};
 use redis::{Commands as _, Connection, RedisResult};
 use redis_async::client::{ConnectionBuilder, PubsubConnection};
-use serde::de::DeserializeOwned;
+use serde::de::{value, DeserializeOwned};
 use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
@@ -227,12 +227,12 @@ impl RedisService {
         Ok(result)
     }
 
-    pub fn set(self: Arc<Self>, key: String, value: u32) -> Result<(), Error> {
+    pub fn set(self: Arc<Self>, key: String, value: String) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        match conn.set::<String, u32, ()>(key.clone(), value.clone()) {
+        match conn.set::<String, String, ()>(key.clone(), value.clone()) {
             Ok(_) => Ok(()),
             Err(e) => Err(anyhow!(
                 "redis failed to set key={} with value={} err={}",key, value,
@@ -241,12 +241,12 @@ impl RedisService {
         }
     }
 
-    pub fn get(self: Arc<Self>, key: String) -> Result<u32, Error> {
+    pub fn get(self: Arc<Self>, key: String) -> Result<String, Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        let value: u32 = conn
+        let value = conn
             .get(key.clone())
             .map_err(|e| anyhow!("redis failed to get key={} err={}", key, e))?;
         Ok(value)
