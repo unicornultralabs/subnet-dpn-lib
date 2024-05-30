@@ -227,12 +227,12 @@ impl RedisService {
         Ok(result)
     }
 
-    pub fn set(self: Arc<Self>, key: String, value: String) -> Result<(), Error> {
+    pub fn set(self: Arc<Self>, key: String, value: String, exp: Option<u64>) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
             .map_err(|e| anyhow!("cannot get connection err={}", e))?;
-        match conn.set::<String, String, ()>(key.clone(), value.clone()) {
+        match conn.set_ex::<String, String, ()>(key.clone(), value.clone(), exp) {
             Ok(_) => Ok(()),
             Err(e) => Err(anyhow!(
                 "redis failed to set key={} with value={} err={}",key, value,
