@@ -227,7 +227,7 @@ impl RedisService {
         Ok(result)
     }
 
-    pub fn set(self: Arc<Self>, key: String, value: String, exp: Option<u64>) -> Result<(), Error> {
+    pub fn set(self: Arc<Self>, key: String, value: String, exp: u64) -> Result<(), Error> {
         let mut conn = self
             .client
             .get_connection()
