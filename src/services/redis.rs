@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Error, Result};
 use redis::{Commands as _, Connection, RedisResult};
 use redis_async::client::{ConnectionBuilder, PubsubConnection};
-use serde::de::{value, DeserializeOwned};
+use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
