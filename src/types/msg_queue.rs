@@ -11,6 +11,7 @@ pub const EVENTS_EXCHANGE: &str = "dpn-events";
 pub const STATS_EXCHANGE: &str = "dpn-stats";
 pub const TXS_EXCHANGE: &str = "dpn-txs";
 pub const WITHDRAWALS_EXCHANGE: &str = "dpn-withdrawals";
+pub const BALANCES_EXCHANGE: &str = "dpn-balances";
 
 pub const CONNECTION_EVENTS_ADMIN_QUEUE: &str = "connection-events_admin";
 pub const CONNECTION_EVENTS_EXPLORER_QUEUE: &str = "connection-events_explorer";
