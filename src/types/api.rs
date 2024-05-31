@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct ErrorWrapper {
-    #[serde(skip_serializing)]
+    #[serde(skip)]
     status_code: u16,
     err_code: Option<usize>,
     err_msg: String,
