@@ -26,6 +26,10 @@ impl ErrorWrapper {
         self
     }
 
+    pub fn err_msg(&self) -> String {
+        self.err_msg.clone()
+    }
+
     pub fn build(&mut self) -> HttpResponse {
         match StatusCode::from_u16(self.status_code) {
             Ok(code) => match code {
