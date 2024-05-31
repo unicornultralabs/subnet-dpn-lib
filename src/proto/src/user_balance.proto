@@ -1,0 +1,7 @@
+syntax = "proto3";
+package subnet_dpn.user_balance;
+
+message ProtoUserBalance {
+  string user_addr = 1;
+  int64 balance = 2;
+}

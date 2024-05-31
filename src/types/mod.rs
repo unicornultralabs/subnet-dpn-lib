@@ -1,9 +1,11 @@
+pub mod accounting;
 pub mod api;
 pub mod auth;
 pub mod bandwidth;
 pub mod connection;
 pub mod geo;
 pub mod internal_tx;
+pub mod location;
 pub mod masternode;
 pub mod msg_queue;
 pub mod noti;
@@ -16,4 +18,3 @@ pub mod tier;
 pub mod tx;
 pub mod user;
 pub mod user_xp;
-pub mod location;
