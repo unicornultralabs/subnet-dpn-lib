@@ -45,6 +45,9 @@ pub struct ProxyAccData {
     pub ip_rotation_period: i64,
     pub whitelisted_ip: Option<String>,
     pub user_addr: String,
+    pub continent: String,
+    pub country: String,
+    pub status: i8,
     pub country_geoname_id: i64,
     pub city_geoname_id: Option<i64>,
     pub rate_per_kb: i64,
@@ -70,7 +73,6 @@ impl ProxyAccData {
     ) -> Self {
         let mut _self = Self {
             id: "".to_string(),
-            user_addr,
             password,
             ip_rotation_period,
             whitelisted_ip,
