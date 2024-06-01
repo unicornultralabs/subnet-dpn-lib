@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct ErrorWrapper {
-    #[serde(skip_serializing)]
+    #[serde(skip)]
     status_code: u16,
     err_code: Option<usize>,
     err_msg: String,
@@ -24,6 +24,10 @@ impl ErrorWrapper {
     pub fn err_code(&mut self, err_code: usize) -> &mut Self {
         self.err_code = Some(err_code);
         self
+    }
+
+    pub fn err_msg(&self) -> String {
+        self.err_msg.clone()
     }
 
     pub fn build(&mut self) -> HttpResponse {

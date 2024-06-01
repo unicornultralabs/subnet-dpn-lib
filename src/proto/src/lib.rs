@@ -20,5 +20,9 @@ pub mod stream_payload {
     include!(concat!(env!("OUT_DIR"), "/subnet_dpn.stream_payload.rs"));
 }
 
+pub mod user_balance {
+    include!(concat!(env!("OUT_DIR"), "/subnet_dpn.user_balance.rs"));
+}
+
 #[cfg(test)]
 mod tests {}
