@@ -46,7 +46,6 @@ pub struct UserSignUpReq {
     pub email: String,
     pub username: String,
     pub password: String,
-    pub confirm_password: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, ToSchema)]
@@ -54,12 +53,6 @@ pub struct UserSignUpResp {
     pub user_id: String,
 }
 
-#[derive(Deserialize, Serialize, Debug, ToSchema)]
-pub struct ResetPasswordReq {
-    pub email: String,
-    pub password: String,
-    pub confirm_password: String,
-}
 
 #[derive(Deserialize, Serialize, Debug, ToSchema)]
 pub struct SSORes {
