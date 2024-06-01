@@ -1,3 +1,5 @@
+use std::os::linux::raw::stat;
+
 use dpn_proto::proxy_acc::ProtoProxyAcc;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
@@ -45,9 +47,8 @@ pub struct ProxyAccData {
     pub ip_rotation_period: i64,
     pub whitelisted_ip: Option<String>,
     pub user_addr: String,
-    pub continent: String,
-    pub country: String,
     pub status: i8,
+    pub continent_geoname_id: i64,
     pub country_geoname_id: i64,
     pub city_geoname_id: Option<i64>,
     pub rate_per_kb: i64,
@@ -63,6 +64,8 @@ impl ProxyAccData {
         ip_rotation_period: i64,
         whitelisted_ip: Option<String>,
         user_addr: String,
+        status: i8,
+        continent_geoname_id: i64,
         country_geoname_id: i64,
         city_geoname_id: Option<i64>,
         rate_per_kb: i64,
@@ -76,6 +79,9 @@ impl ProxyAccData {
             password,
             ip_rotation_period,
             whitelisted_ip,
+            user_addr,
+            status,
+            continent_geoname_id,
             country_geoname_id,
             city_geoname_id,
             rate_per_kb,
