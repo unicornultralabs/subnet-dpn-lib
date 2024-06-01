@@ -43,6 +43,7 @@ pub struct UserSignInReq {
 
 #[derive(serde::Deserialize, Debug, Clone, ToSchema)]
 pub struct UserSignUpReq {
+    pub email: String,
     pub username: String,
     pub password: String,
 }
@@ -51,6 +52,7 @@ pub struct UserSignUpReq {
 pub struct UserSignUpResp {
     pub user_id: String,
 }
+
 
 #[derive(Deserialize, Serialize, Debug, ToSchema)]
 pub struct SSORes {
