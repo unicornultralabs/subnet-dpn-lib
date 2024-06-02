@@ -26,8 +26,6 @@ pub trait AdminService: Debug + Send + Sync + 'static {
 
 #[derive(Debug)]
 pub struct AdminServiceImpl {
-    base_url: String,
-
     // paths
     health_check: String,
 
@@ -47,7 +45,6 @@ impl AdminServiceImpl {
         };
 
         Ok(Self {
-            base_url: base_url.clone(),
             health_check: format!("{}/{}", base_url.clone(), "metrics/health"),
             verify_auth_token: format!("{}/{}", base_url.clone(), "auth/verify_auth_token"),
             refresh_token_path: format!("{}/{}", base_url.clone(), "auth/refresh_token"),
