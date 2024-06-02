@@ -1,5 +1,3 @@
-use std::os::linux::raw::stat;
-
 use dpn_proto::proxy_acc::ProtoProxyAcc;
 use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
@@ -64,7 +62,7 @@ impl ProxyAccData {
         ip_rotation_period: i64,
         whitelisted_ip: Option<String>,
         user_addr: String,
-        status: i8,
+        is_active: bool,
         continent_geoname_id: i64,
         country_geoname_id: i64,
         city_geoname_id: Option<i64>,
