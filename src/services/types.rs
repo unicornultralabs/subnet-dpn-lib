@@ -20,4 +20,5 @@ pub enum ProxyAccChanged {
     Created(ProxyAccData),
     Updated(ProxyAccData),
     Deleted(String), // proxy_acc_id
+    RefreshAll(),
 }
