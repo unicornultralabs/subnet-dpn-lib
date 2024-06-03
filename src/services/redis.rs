@@ -479,10 +479,6 @@ impl DPNRedisKey {
         )
     }
 
-    pub fn get_balance_k() -> String {
-        "client_user_balance".to_owned()
-    }
-
     pub fn get_peer_queue_k(masternode_id: String) -> String {
         format!("peer_queue_ms#{}_", masternode_id)
     }
