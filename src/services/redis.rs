@@ -3,6 +3,7 @@ use redis::{Commands as _, Connection, RedisResult};
 use redis_async::client::{ConnectionBuilder, PubsubConnection};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
+use log::{info, error};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use url::Url;
 
@@ -143,9 +144,21 @@ impl RedisService {
             .map_err(|e| anyhow!("redis cannot get key={} err={}", key, e))?;
         let mut rs: Vec<(String, T)> = vec![];
         for (key, obj_str) in result.iter() {
-            let proxy_acc = serde_json::from_str::<T>(&obj_str)
-                .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
-            rs.push((key.clone(), proxy_acc.clone()));
+            match serde_json::from_str::<T>(&obj_str) {
+                Ok(proxy_acc) => {
+                    rs.push((key.clone(), proxy_acc.clone()));
+                }
+                Err(e) => {
+                    error!("redis failed to decode key={} err={}", key, e);
+                    // remove the old data
+                    let del = self.clone()
+                        .del(key.clone())
+                        .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e));
+                    if let Err(e) = del {
+                        error!("Failed to delete key={} err={}", key, e);
+                    }
+                }
+            }
         }
         Ok(rs)
     }
