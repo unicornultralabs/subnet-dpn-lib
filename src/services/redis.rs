@@ -393,48 +393,6 @@ impl RedisService {
     /// after removal, proxy accs are loaded from db and added to redis
     pub async fn remove_all_proxy_accs(self: Arc<Self>) -> anyhow::Result<()> {
         let (k, _) = DPNRedisKey::get_proxy_acc_kf("".to_owned());
-
-        match self.clone().hgetall::<ProxyAccData>(k.clone()) {
-            Ok(proxy_accs) => {
-                for (_, proxy_acc) in proxy_accs {
-                    // publish proxy acc change to redis
-                    let change = ProxyAccChanged::Deleted(proxy_acc.id.clone());
-                    if let Err(e) = self
-                        .clone()
-                        .publish(
-                            DPNRedisKey::get_proxy_acc_chan(),
-                            serde_json::to_string(&change).unwrap(),
-                        )
-                        .await
-                    {
-                        return Err(anyhow!(
-                            "redis proxy acc changed publish failed change={:?} err={}",
-                            change,
-                            e
-                        ));
-                    }
-                }
-            }
-            Err(e) => {
-                // publish proxy accounts refresh all to redis
-                let change = ProxyAccChanged::RefreshAll();
-                if let Err(e) = self
-                    .clone()
-                    .publish(
-                        DPNRedisKey::get_proxy_acc_chan(),
-                        serde_json::to_string(&change).unwrap(),
-                    )
-                    .await
-                {
-                    return Err(anyhow!(
-                        "redis proxy acc changed publish failed change={:?} err={}",
-                        change,
-                        e
-                    ));
-                }
-            }
-        }
-
         self.clone()
             .del(k)
             .map_err(|e| anyhow!("failed to remove peers from redis err={}", e))
