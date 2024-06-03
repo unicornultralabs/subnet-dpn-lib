@@ -147,22 +147,6 @@ impl RedisService {
             let proxy_acc = serde_json::from_str::<T>(&obj_str)
                 .map_err(|e| anyhow!("redis failed to decode err={}", e))?;
             rs.push((key.clone(), proxy_acc.clone()));
-
-            // match serde_json::from_str::<T>(&obj_str) {
-            //     Ok(proxy_acc) => {
-            //         rs.push((key.clone(), proxy_acc.clone()));
-            //     }
-            //     Err(e) => {
-            //         error!("redis failed to decode key={} err={}", key, e);
-            //         // remove the old data
-            //         let del = self.clone()
-            //             .del(key.clone())
-            //             .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e));
-            //         if let Err(e) = del {
-            //             error!("Failed to delete key={} err={}", key, e);
-            //         }
-            //     }
-            // }
         }
         Ok(rs)
     }
