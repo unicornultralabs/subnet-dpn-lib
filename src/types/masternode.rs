@@ -3,6 +3,9 @@ use utoipa::ToSchema;
 
 use super::geo::Geo;
 
+pub const PEER_V0: [u8; 2] = [0u8, 0u8];
+pub const PEER_V1: [u8; 2] = [0u8, 1u8];
+
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct MasternodeInfo {
     pub peer_bind: String,
