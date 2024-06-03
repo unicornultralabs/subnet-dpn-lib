@@ -266,7 +266,7 @@ impl RedisService {
             let change = PeerChanged::Disconnected(PeerChangedInfo {
                 uuid: change.uuid.clone(),
                 login_session_id: change.login_session_id.clone(),
-                ip_u32: change.ip_u32,
+                addr_u128: change.addr_u128,
             });
 
             if let Err(e) = self
@@ -298,14 +298,14 @@ impl RedisService {
         match status.clone() {
             PeerChanged::Connected(info) => {
                 // add peer to redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.ip_u32);
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.addr_u128);
                 if let Err(e) = self.clone().hset(k, f, info.clone()) {
                     return Err(anyhow!("redis peer add failed err={}", e));
                 }
             }
             PeerChanged::Disconnected(info) => {
                 // remove peer from redis hash
-                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.ip_u32);
+                let (k, f) = DPNRedisKey::get_peers_kf(masternode_id.clone(), info.addr_u128);
                 if let Err(e) = self.clone().hdel(k, f) {
                     return Err(anyhow!("redis peer removal failed err={}", e));
                 }
@@ -454,8 +454,11 @@ impl DPNRedisKey {
         format!("peer_queue_ms#{}_", masternode_id)
     }
 
-    pub fn get_peers_kf(masternode_id: String, ip_u32: u32) -> (String, String) {
-        (format!("peers_ms#{}", masternode_id), format!("{}", ip_u32))
+    pub fn get_peers_kf(masternode_id: String, addr_u128: u128) -> (String, String) {
+        (
+            format!("peers_ms#{}", masternode_id),
+            format!("{}", addr_u128),
+        )
     }
 
     pub fn get_peers_chan(masternode_id: String) -> String {

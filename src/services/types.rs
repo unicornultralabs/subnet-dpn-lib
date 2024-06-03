@@ -12,7 +12,7 @@ pub enum PeerChanged {
 pub struct PeerChangedInfo {
     pub uuid: String,
     pub login_session_id: String,
-    pub ip_u32: u32,
+    pub addr_u128: u128,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
