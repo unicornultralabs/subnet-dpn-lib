@@ -450,6 +450,13 @@ impl DPNRedisKey {
         )
     }
 
+    pub fn get_balance_kf(user_addr: String) -> (String, String) {
+        (
+            "client_user_balance".to_owned(),
+            format!("{}", user_addr),
+        )
+    }
+
     pub fn get_peer_queue_k(masternode_id: String) -> String {
         format!("peer_queue_ms#{}_", masternode_id)
     }
