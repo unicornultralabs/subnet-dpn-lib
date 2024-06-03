@@ -153,7 +153,7 @@ impl RedisService {
                     // remove the old data
                     let del = self.clone()
                         .del(key.clone())
-                        .map_err(|e| anyhow!("failed to remove peers from redis err={}", e));
+                        .map_err(|e| anyhow!("redis failed to delete key={} err={}", key, e));
                     if let Err(e) = del {
                         error!("Failed to delete key={} err={}", key, e);
                     }
