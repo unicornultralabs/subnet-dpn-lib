@@ -23,6 +23,7 @@ pub const STATS_WEBSOCKET_QUEUE: &str = "stats_websocket";
 pub const TXS_ADMIN_QUEUE: &str = "txs_admin";
 pub const TXS_EXPLORER_QUEUE: &str = "txs_explorer";
 pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
+pub const BALANCES_QUEUE: &str = "balances";
 
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
