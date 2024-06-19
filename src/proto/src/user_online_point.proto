@@ -5,6 +5,6 @@ message ProtoUserOnlinePoint {
     string user_addr = 1;
     string login_session_id = 2;
     string masternode_id = 3;
-    int64 poll_at = 4;
-    int64 last_poll_at = 5;
+    uint64 poll_at = 4;
+    uint64 last_poll_at = 5;
 }

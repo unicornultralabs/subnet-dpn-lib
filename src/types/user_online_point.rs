@@ -9,8 +9,8 @@ pub struct UserOnlinePoint {
     pub user_addr: String,
     pub login_session_id: String,
     pub masternode_id: String,
-    pub poll_at: i64,
-    pub last_poll_at: i64,
+    pub poll_at: u64,
+    pub last_poll_at: u64,
 }
 
 impl UserOnlinePoint {
@@ -18,8 +18,8 @@ impl UserOnlinePoint {
         user_addr: String,
         login_session_id: String,
         masternode_id: String,
-        poll_at: i64,
-        last_poll_at: i64,
+        poll_at: u64,
+        last_poll_at: u64,
     ) -> Self {
         Self {
             user_addr,
