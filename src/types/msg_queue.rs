@@ -24,6 +24,7 @@ pub const TXS_ADMIN_QUEUE: &str = "txs_admin";
 pub const TXS_EXPLORER_QUEUE: &str = "txs_explorer";
 pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
 pub const BALANCES_QUEUE: &str = "balances";
+pub const TAPOINT_EVENT_QUEUE: &str = "tapoint-events_admin";
 
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
@@ -31,7 +32,8 @@ pub const CONNECTION_ROUTING_KEY: &str = "connection";
 pub const REFERRAL_ROUTING_KEY: &str = "referral";
 pub const SESSION_ROUTING_KEY: &str = "session";
 pub const TXS_ROUTING_KEY: &str = "txs";
-pub const INTERNAL_TXS_ROUTING_KEY: &str = "internal_txs";
+pub const TAPOINT_EVENT_ROUTING_KEY: &str = "online";
+
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 
