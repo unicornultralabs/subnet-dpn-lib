@@ -24,5 +24,9 @@ pub mod user_balance {
     include!(concat!(env!("OUT_DIR"), "/subnet_dpn.user_balance.rs"));
 }
 
+pub mod user_online_point {
+    include!(concat!(env!("OUT_DIR"), "/subnet_dpn.user_online_point.rs"));
+}
+
 #[cfg(test)]
 mod tests {}
