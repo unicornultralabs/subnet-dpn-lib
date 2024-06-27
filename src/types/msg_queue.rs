@@ -26,14 +26,14 @@ pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
 pub const BALANCES_QUEUE: &str = "balances";
 pub const TAPPOINT_EVENT_QUEUE: &str = "tappoint-events_admin";
 pub const REGISTER_NOTIFICATION_QUEUE: &str = "notification-events_admin";
-pub const NOLONGER_ONLINE_PEER_ROUTING_KEY: &str = "notification-nolonger_online_peer";
+pub const NOLONGER_ONLINE_PEER_QUEUE: &str = "notification-nolonger_online_peer";
 
 
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
 pub const CONNECTION_ROUTING_KEY: &str = "connection";
 pub const NOTIFICATION_ROUTING_KEY: &str = "notification";
-pub const PEER_NOT_HEALTH_ROUTING_KEY: &str = "not_health";
+pub const NOLONGER_ONLINE_PEER_ROUTING_KEY: &str = "nolonger_online_peer";
 pub const REFERRAL_ROUTING_KEY: &str = "referral";
 pub const SESSION_ROUTING_KEY: &str = "session";
 pub const TXS_ROUTING_KEY: &str = "txs";
