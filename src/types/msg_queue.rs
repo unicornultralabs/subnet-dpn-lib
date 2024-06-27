@@ -25,10 +25,15 @@ pub const TXS_EXPLORER_QUEUE: &str = "txs_explorer";
 pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
 pub const BALANCES_QUEUE: &str = "balances";
 pub const TAPPOINT_EVENT_QUEUE: &str = "tappoint-events_admin";
+pub const REGISTER_NOTIFICATION_QUEUE: &str = "notification-events_admin";
+pub const PEER_NOT_HEALTH_QUEUE: &str = "notification-peer_not_health";
+
 
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
 pub const CONNECTION_ROUTING_KEY: &str = "connection";
+pub const NOTIFICATION_ROUTING_KEY: &str = "notification";
+pub const PEER_NOT_HEALTH_ROUTING_KEY: &str = "not_health";
 pub const REFERRAL_ROUTING_KEY: &str = "referral";
 pub const SESSION_ROUTING_KEY: &str = "session";
 pub const TXS_ROUTING_KEY: &str = "txs";
