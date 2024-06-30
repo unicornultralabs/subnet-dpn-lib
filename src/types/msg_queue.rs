@@ -6,13 +6,14 @@ use super::{
     internal_tx::InternalTx,
     tx::{Tx,TxStatus},
 };
-
+// exchanges 
 pub const EVENTS_EXCHANGE: &str = "dpn-events";
 pub const STATS_EXCHANGE: &str = "dpn-stats";
 pub const TXS_EXCHANGE: &str = "dpn-txs";
 pub const WITHDRAWALS_EXCHANGE: &str = "dpn-withdrawals";
 pub const BALANCES_EXCHANGE: &str = "dpn-balances";
-
+pub const NOTIFICATION_EXCHANGE: &str = "dpn-notifications";
+// queues
 pub const CONNECTION_EVENTS_ADMIN_QUEUE: &str = "connection-events_admin";
 pub const CONNECTION_EVENTS_EXPLORER_QUEUE: &str = "connection-events_explorer";
 pub const EVENTS_ACCOUNTNG_QUEUE: &str = "events_accounting";
@@ -25,20 +26,16 @@ pub const TXS_EXPLORER_QUEUE: &str = "txs_explorer";
 pub const TXS_ONCHAIN_QUEUE: &str = "txs_onchain";
 pub const BALANCES_QUEUE: &str = "balances";
 pub const TAPPOINT_EVENT_QUEUE: &str = "tappoint-events_admin";
-pub const REGISTER_NOTIFICATION_QUEUE: &str = "notification-events_admin";
-pub const NOLONGER_ONLINE_PEER_QUEUE: &str = "notification-nolonger_online_peer";
-
-
+pub const NOTIFICATION_REGISTER_QUEUE: &str = "notification-register_admin";
+// routing keys
 pub const DEPOSIT_ROUTING_KEY: &str = "deposit";
 pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
 pub const CONNECTION_ROUTING_KEY: &str = "connection";
-pub const NOTIFICATION_ROUTING_KEY: &str = "notification";
-pub const NOLONGER_ONLINE_PEER_ROUTING_KEY: &str = "nolonger_online_peer";
 pub const REFERRAL_ROUTING_KEY: &str = "referral";
 pub const SESSION_ROUTING_KEY: &str = "session";
 pub const TXS_ROUTING_KEY: &str = "txs";
 pub const TAPPOINT_EVENT_ROUTING_KEY: &str = "tappoint";
-
+pub const NOTIFICATION_REGISTER_ROUTING_KEY: &str = "register";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 
