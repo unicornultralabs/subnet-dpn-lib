@@ -11,6 +11,6 @@ pub struct NotificationRegister {
 
 #[derive(Debug, Clone, Serialize)]
 pub enum Notification {
-    RegisterNotification(RegisterNotification),
-    // NoLongerOnlinePeer(Vec<String>)
+    RegisterNotification(NotificationRegister),
+    // NoLongerOnlinePeers(Vec<String>)
 }
