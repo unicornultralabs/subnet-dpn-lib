@@ -4,9 +4,10 @@ use super::{
     bandwidth::{EphemeralSession, SessionTerminationReason},
     connection::PeernodeInfo,
     internal_tx::InternalTx,
-    tx::{Tx,TxStatus},
+    noti::NotificationRegister,
+    tx::{Tx, TxStatus},
 };
-// exchanges 
+// exchanges
 pub const EVENTS_EXCHANGE: &str = "dpn-events";
 pub const STATS_EXCHANGE: &str = "dpn-stats";
 pub const TXS_EXCHANGE: &str = "dpn-txs";
@@ -127,4 +128,10 @@ pub struct ReferralExtra {
 pub enum DPNTx {
     Tx(Tx),
     InternalTx(InternalTx),
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub enum NotificationEvent {
+    Register(NotificationRegister),
+    // NoLongerOnlinePeers(Vec<String>)
 }
