@@ -6,4 +6,5 @@ pub struct NotificationRegister {
     pub email: String,
     pub token: String,
     pub device_type: String,
+    pub login_session_id: String,
 }
