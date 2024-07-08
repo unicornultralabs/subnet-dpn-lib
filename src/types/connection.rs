@@ -9,6 +9,12 @@ pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
 pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct UserConnectStats {
+    pub user_addr: String,
+    pub last_connect_time: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct PeernodeInfo {
     pub peer_id: String,
     pub ip_addr: String,
