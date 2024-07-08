@@ -5,6 +5,8 @@ use utoipa::ToSchema;
 
 use crate::utils::{bytes_to_hex_string, hash::hash};
 
+use super::geo::Geo;
+
 pub const DEFAULT_IP_ROTATION_PERIOD: i64 = 300;
 pub const MAX_INACTIVE_TIME: i64 = 300; // 300 seconds
 
@@ -30,6 +32,7 @@ pub struct OnlinePeerInfo {
     pub peer_id: String,
     pub ip_addr: String,
     pub login_session_id: String,
+    pub geo: Geo
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
