@@ -25,6 +25,13 @@ pub struct PeernodeInfo {
     pub country_geoname_id: u32,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct PeernodeOnlineStats {
+    pub peer_id: String,
+    pub ip_addr: String,
+    pub login_session_id: String,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerStats {
     pub masternode_id: String,
