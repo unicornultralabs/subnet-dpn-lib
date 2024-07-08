@@ -26,7 +26,7 @@ pub struct PeernodeInfo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub struct PeernodeOnlineStats {
+pub struct OnlinePeerInfo {
     pub peer_id: String,
     pub ip_addr: String,
     pub login_session_id: String,
