@@ -35,7 +35,6 @@ pub const WITHDRAWAL_ROUTING_KEY: &str = "withdrawal";
 pub const CONNECTION_ROUTING_KEY: &str = "connection";
 pub const REFERRAL_ROUTING_KEY: &str = "referral";
 pub const SESSION_ROUTING_KEY: &str = "session";
-pub const NOTIFICATION_ROUTING_KEY: &str = "notification";
 pub const TXS_ROUTING_KEY: &str = "txs";
 pub const TAPPOINT_EVENT_ROUTING_KEY: &str = "tappoint";
 pub const NOTIFICATION_REGISTER_ROUTING_KEY: &str = "register";
@@ -135,5 +134,4 @@ pub enum DPNTx {
 #[derive(Debug, Clone, Serialize)]
 pub enum NotificationEvent {
     Register(NotificationRegister),
-    // NoLongerOnlinePeers(Vec<String>)
 }
