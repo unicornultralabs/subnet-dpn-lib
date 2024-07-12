@@ -1,8 +1,9 @@
 use dpn_proto::user_balance::{ProtoBalanceChange, ProtoRefreshBalances, ProtoUserBalance};
 use prost::Message;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct UserBalance {
     pub user_addr: String,
     pub balance: i64,
