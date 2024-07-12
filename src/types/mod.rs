@@ -19,3 +19,4 @@ pub mod tx;
 pub mod user;
 pub mod user_xp;
 pub mod user_online_point;
+pub mod client;
