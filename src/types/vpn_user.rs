@@ -1,3 +1,4 @@
+use ethers::types::Address;
 use utoipa::ToSchema;
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
