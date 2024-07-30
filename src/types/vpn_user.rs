@@ -1,4 +1,5 @@
 use ethers::types::Address;
+use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
@@ -10,7 +11,7 @@ pub struct VpnUser {
     pub last_login: i64,
 }
 
-impl User {
+impl VpnUser {
     pub fn new(
         email: Option<String>,
         deposit_addr: Address,
