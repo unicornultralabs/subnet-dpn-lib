@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use web3::types::{Address, U256};
 use utoipa::ToSchema;
 
+
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct User {
     pub email: Option<String>,
@@ -45,6 +46,22 @@ impl User {
             balance: U256::zero(),
             created_at,
             last_login,
+        }
+    }
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub enum UserType {
+    DPN,
+    VPN,
+}
+
+impl UserType {
+    pub fn to_string(&self) -> String {
+        match self {
+            UserType::DPN => "DPN".to_string(),
+            UserType::VPN => "VPN".to_string(),
         }
     }
 }
