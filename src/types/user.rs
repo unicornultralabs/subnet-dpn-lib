@@ -51,7 +51,7 @@ impl User {
 }
 
 
-#[derive(Debug, Clone, FromPrimitive, Serialize, Deserialize, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub enum UserType {
     DPN,
     VPN,
