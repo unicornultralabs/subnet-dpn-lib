@@ -477,6 +477,10 @@ impl DPNRedisKey {
         ("proxy_acc".to_owned(), id)
     }
 
+    pub fn get_uptime_xp_kf(id: String) -> (String, String) {
+        ("uptime_xp".to_owned(), id)
+    }
+
     pub fn get_proxy_acc_chan() -> String {
         "proxy_acc_updated".to_string()
     }
